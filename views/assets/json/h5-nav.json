@@ -11,12 +11,12 @@
   },
   {
     "name": "Celeste Web",
-    "custom": "celeste",
+    "path": "webleste/",
     "img": "celeste.webp"
   },
   {
     "name": "Terraria Web",
-    "custom": "terraria",
+    "path": "terraria/",
     "img": "terraria.webp"
   },
   {
@@ -105,6 +105,11 @@
     "img": "snake.webp"
   },
   {
+    "name": "Half Life 1",
+    "path": "halflife/",
+    "img": "halflife.webp"
+  },
+  {
     "name": "Super Mario 64",
     "path": "sm64/",
     "img": "sm64.webp"
@@ -154,6 +159,11 @@
     "name": "Evil Glitch",
     "path": "evilglitch/",
     "img": "glitch2.webp"
+  },
+  {
+    "name": "Candybox 2",
+    "path": "candybox/",
+    "img": "candybox2.webp"
   },
   {
     "name": "Pac-man",
@@ -235,6 +245,11 @@
     "name": "Chess",
     "path": "chess/",
     "img": "chess2.webp"
+  },
+  {
+    "name": "Quake III Arena",
+    "path": "quake3/",
+    "img": "quake3.webp"
   },
   {
     "name": "Connect 3",

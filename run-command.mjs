@@ -8,6 +8,7 @@ import {
   rmSync,
   existsSync,
 } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { exec, fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
@@ -18,6 +19,11 @@ import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import paintSource from './src/source-rewrites.mjs';
 import { loadTemplates, tryReadFile } from './src/templates.mjs';
+
+const scramjetPath = join(
+  dirname(fileURLToPath(import.meta.url)),
+  'node_modules/@mercuryworkshop/scramjet/dist'
+);
 
 // This constant is copied over from /src/server.mjs.
 const shutdown = fileURLToPath(new URL('./src/.shutdown', import.meta.url));
@@ -162,12 +168,16 @@ commands: for (let i = 2; i < process.argv.length; i++)
         libcurl: libcurlPath,
         baremux: baremuxPath,
         uv: uvPath,
+        scram: scramjetPath,
       };
       for (const path of Object.entries(compilePaths)) {
         const prefix = path[0] + '/',
           prefixUrl = new URL('./views/dist/' + prefix, import.meta.url);
         if (!existsSync(prefixUrl)) mkdirSync(prefixUrl);
-        compile(path[1].slice(path[1].indexOf('node_modules')), '', prefix);
+
+        compile(path[1].slice(path[1].indexOf('node_modules')), '', prefix, undefined, 
+        path[0] === 'scram' ? (file) => file === 'scramjet.all.js' : undefined
+        );
       }
 
       // Minify the scripts and stylesheets upon compiling, if enabled in config.
@@ -206,7 +216,7 @@ commands: for (let i = 2; i < process.argv.length; i++)
           rmSync(targetPath, { force: true, recursive: true });
           mkdirSync(targetPath);
           writeFileSync(
-            fileURLToPath(new URL(targetDir + '/.gitkeep', import.meta.url)), 
+            fileURLToPath(new URL(targetDir + '/.gitkeep', import.meta.url)),
             ''
           );
           console.log(
@@ -216,6 +226,16 @@ commands: for (let i = 2; i < process.argv.length; i++)
         } catch (e) {
           console.error('[Clean Error]', e);
         }
+      break;
+    }
+
+    case 'format': {
+      exec('npx prettier --write .', (error, stdout) => {
+        if (error) {
+          console.error('[Clean Error]', error);
+        }
+        console.log('[Clean]', stdout);
+      });
       break;
     }
 
