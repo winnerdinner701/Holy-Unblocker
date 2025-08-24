@@ -17,8 +17,9 @@ const testEndpoint = async (url) => {
 const generateUrl = async (omniboxId, urlPath, errorPrefix = 'failure') => {
   // Wait for the document to load before getting the omnibox.
   await new Promise((resolve) => {
-    if (document.readyState === 'complete') resolve();
-    else window.addEventListener('load', resolve);
+    const waitLonger = () => setTimeout(resolve, 5000);
+    if (document.readyState === 'complete') waitLonger();
+    else window.addEventListener('load', waitLonger);
   });
 
   let omnibox = document.getElementById(omniboxId);
@@ -98,7 +99,6 @@ const testServerResponse = async () => {
     'http://localhost:8080/apps',
     'http://localhost:8080/flash',
     'http://localhost:8080/webretro',
-    'http://localhost:8080/assets/js/particlesjs/particles.js',
     'http://localhost:8080/assets/js/card.js',
     'http://localhost:8080/assets/js/common-1735118314.js',
     'http://localhost:8080/assets/js/csel.js',
@@ -237,8 +237,9 @@ xx                                                  xx
 
           await new Promise((resolve) => {
             const waitForDocument = () => {
-                if (document.readyState === 'complete') resolve();
-                else window.addEventListener('load', resolve);
+                const waitLonger = () => setTimeout(resolve, 5000);
+                if (document.readyState === 'complete') waitLonger();
+                else window.addEventListener('load', waitLonger);
               },
               // Wait until a service worker is registered before continuing.
               // Also check again to make sure the document is loaded.

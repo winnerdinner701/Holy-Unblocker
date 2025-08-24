@@ -72,7 +72,7 @@ const searchEngines = Object.freeze({
     '{{DuckDuckGo}}': 'duckduckgo.com/?q=',
     '{{Brave}}': 'search.brave.com/search?q=',
   }),
-  defaultSearch = '{{Brave}}',
+  defaultSearch = '{{defaultSearch}}',
   autocompletes = Object.freeze({
     // Startpage has used both Google's and Bing's autocomplete.
     // For now, just use Bing.
@@ -513,7 +513,7 @@ const RammerheadEncode = async (baseUrl) => {
  *
  * goProx.searx();
  */
-addEventListener('DOMContentLoaded', async () => {
+const preparePage = async () => {
   // This won't break the service workers as they store the variable separately.
   uvConfig = self['{{__uv$config}}'];
   delete self['{{__uv$config}}'];
@@ -540,10 +540,6 @@ addEventListener('DOMContentLoaded', async () => {
     rnav: urlHandler(location.protocol + '//client.' + getDomain()),
 
     osu: urlHandler(location.origin + '{{route}}{{/archive/osu}}'),
-
-    celeste: urlHandler(location.origin + '{{route}}{{/archive/celeste}}'),
-
-    terraria: urlHandler(location.origin + '{{route}}{{/archive/terraria}}'),
 
     agar: urlHandler(sjUrl('https://agar.io')),
 
@@ -793,15 +789,42 @@ addEventListener('DOMContentLoaded', async () => {
     else loadFrame();
   }
 
+  const banner = document.getElementById('banner');
+  if (banner) {
+    let tries = 0;
+    const useAOS = () => {
+      try {
+        AOS.init();
+      } catch (e) {
+        if (tries <= 5) {
+          tries++;
+          setTimeout(useAOS, 600);
+        }
+      }
+    };
+    useAOS();
+
+    fetch('{{route}}{{/assets/json/splash.json}}', {
+      mode: 'same-origin',
+    }).then((response) => {
+      response.json().then((splashList) => {
+        banner.firstElementChild.innerHTML =
+          splashList[(Math.random() * splashList.length) | 0];
+      });
+    });
+  }
+
   // Load in relevant JSON files used to organize large sets of data.
   // This first one is for links, whereas the rest are for navigation menus.
-  const huLinks = await fetch('{{route}}{{/assets/json/links.json}}', {
+  fetch('{{route}}{{/assets/json/links.json}}', {
     mode: 'same-origin',
-  }).then((response) => response.json());
-
-  for (let items = Object.entries(huLinks), i = 0; i < items.length; i++)
-    // Replace all placeholder links with the corresponding entry in huLinks.
-    (document.getElementById(items[i][0]) || {}).href = items[i][1];
+  }).then((response) => {
+    response.json().then((huLinks) => {
+      for (let items = Object.entries(huLinks), i = 0; i < items.length; i++)
+        // Replace all placeholder links with the corresponding entry in huLinks.
+        (document.getElementById(items[i][0]) || {}).href = items[i][1];
+    });
+  });
 
   const navLists = {
     // Pair an element ID with a JSON file name. They are identical for now.
@@ -908,5 +931,8 @@ addEventListener('DOMContentLoaded', async () => {
       }
     }
   }
-});
+};
+if ('loading' === document.readyState)
+  addEventListener('DOMContentLoaded', preparePage);
+else preparePage();
 })();

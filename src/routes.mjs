@@ -85,6 +85,8 @@ let externalPages = {
     ultraviolet: 'https://github.com/titaniumnetwork-dev/Ultraviolet',
     wisp: 'https://github.com/MercuryWorkshop/wisp-protocol',
   },
+  'codespaces': 'https://github.com/codespaces',
+  'tor-project': 'https://tb-manual.torproject.org/installation',
   'titaniumnetwork-documentation': 'https://docs.titaniumnetwork.org',
   'titaniumnetwork-discord': 'https://discord.gg/CwWpdGkuWY',
   'rammerhead-discord': 'https://discord.gg/VNT4E7gN5Y',
@@ -118,6 +120,8 @@ let altPaths = {
     wisp: 'router',
   },
   'titaniumnetwork-documentation': 'docs',
+  'codespaces': 'codesp',
+  'tor-project': 'tr',
   'titaniumnetwork-discord': 'social',
   'rammerhead-discord': 'rdis',
   /* Raw File Names */
@@ -134,6 +138,12 @@ let altPaths = {
     'uv.webp': 'nt.webp',
     'scramjet.webp': 'wr.webp',
     'rammerhead.webp': 'physics.webp',
+    'fastify.webp': 'fs.webp',
+    'nordtheme.webp': 'nord.webp',
+    'nodejs.webp': 'node.webp',
+    'fontawesome.webp': 'fa.webp',
+    'webretro.webp': 'notebook.webp',
+    'ruffle.webp': 'rs.webp',
   },
   /* Prefixes */
   prefixes: {
@@ -223,9 +233,9 @@ const cookingInserts = insert.content,
   delimiter = insert.delimiter,
   textMasks = insert.textMasks,
   splashRandom = insert.splash,
-  VersionValue = insert.version,
+  versionValue = insert.version,
   cacheBustList = {
-    'styles.css': 'styles-1735118314.css',
+    'styles.css': 'styles-1755147161.css',
     'common.js': 'common-1735118314.js',
   };
 
@@ -245,6 +255,6 @@ export {
   delimiter,
   textMasks,
   splashRandom,
-  VersionValue,
+  versionValue,
   cacheBustList,
 };

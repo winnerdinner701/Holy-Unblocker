@@ -4,7 +4,13 @@ import wisp from 'wisp-server-node';
 import createRammerhead from '../lib/rammerhead/src/server/index.js';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
-import { serverUrl, pages, externalPages, getAltPrefix } from './routes.mjs';
+import {
+  config,
+  serverUrl,
+  pages,
+  externalPages,
+  getAltPrefix,
+} from './routes.mjs';
 import { tryReadFile, preloaded404 } from './templates.mjs';
 import { fileURLToPath } from 'node:url';
 import { existsSync, unlinkSync } from 'node:fs';
@@ -98,7 +104,16 @@ app.register(fastifyStatic, {
 
 // All entries in the dist folder are created with source rewrites.
 // Minified scripts are also served here, if minification is enabled.
-['assets', 'uv', 'scram', 'epoxy', 'libcurl', 'baremux'].forEach((prefix) => {
+[
+  'assets',
+  'archive',
+  'uv',
+  'scram',
+  'epoxy',
+  'libcurl',
+  'baremux',
+  'eruda',
+].forEach((prefix) => {
   app.register(fastifyStatic, {
     root: fileURLToPath(new URL('../views/dist/' + prefix, import.meta.url)),
     prefix: getAltPrefix(prefix, serverUrl.pathname),
@@ -107,14 +122,8 @@ app.register(fastifyStatic, {
 });
 
 app.register(fastifyStatic, {
-  root: fileURLToPath(new URL('../views/archive', import.meta.url)),
-  prefix: getAltPrefix('archive', serverUrl.pathname),
-  decorateReply: false,
-});
-
-app.register(fastifyStatic, {
   root: fileURLToPath(
-    new URL('../views/archive/gfiles/rarch', import.meta.url)
+    new URL('../views/dist/archive/gfiles/rarch', import.meta.url)
   ),
   prefix: getAltPrefix('serving', serverUrl.pathname),
   decorateReply: false,
@@ -124,7 +133,7 @@ app.register(fastifyStatic, {
 ['cores', 'info', 'roms'].forEach((prefix) => {
   app.register(fastifyStatic, {
     root: fileURLToPath(
-      new URL('../views/archive/gfiles/rarch/' + prefix, import.meta.url)
+      new URL('../views/dist/archive/gfiles/rarch/' + prefix, import.meta.url)
     ),
     prefix: getAltPrefix(prefix, serverUrl.pathname),
     decorateReply: false,
@@ -133,7 +142,7 @@ app.register(fastifyStatic, {
 
 app.register(fastifyStatic, {
   root: fileURLToPath(
-    new URL('../views/archive/gfiles/rarch/cores', import.meta.url)
+    new URL('../views/dist/archive/gfiles/rarch/cores', import.meta.url)
   ),
   prefix: getAltPrefix('uauth', serverUrl.pathname),
   decorateReply: false,
@@ -149,12 +158,50 @@ app.register(fastifyStatic, {
  */
 
 const supportedTypes = {
-  default: 'text/html',
-  html: 'text/html',
-  txt: 'text/plain',
-  xml: 'application/xml',
-  ico: 'image/vnd.microsoft.icon',
-};
+    default: config.disguiseFiles ? 'image/vnd.microsoft.icon' : 'text/html',
+    html: 'text/html',
+    txt: 'text/plain',
+    xml: 'application/xml',
+    ico: 'image/vnd.microsoft.icon',
+  },
+  isNotHtml = /\.(?!html$)[\w-]+$/i,
+  disguise = 'ico',
+  loaderFile = config.disguiseFiles
+    ? tryReadFile(
+        '../views/dist/pages/misc/deobf/loader.html',
+        import.meta.url,
+        false
+      )
+    : '';
+
+if (config.disguiseFiles)
+  app.addHook('preHandler', (req, reply, done) => {
+    if (req.params.modified) return done();
+    const reqPath = new URL(req.url, serverUrl).pathname.slice(
+      serverUrl.pathname.length
+    );
+    if (
+      (!reqPath.endsWith('.' + disguise) && isNotHtml.test(reqPath)) ||
+      reqPath.indexOf('github/') === 0 ||
+      reqPath.indexOf('assets/ico/') === 0 ||
+      reqPath === 'test-shutdown'
+    )
+      return done();
+    if (!reqPath.endsWith('.' + disguise) || reqPath in pages) {
+      reply.type(supportedTypes.html).send(loaderFile);
+      reply.hijack();
+      return done();
+    } else if (!(reqPath in pages) && !reqPath.endsWith('favicon.ico')) {
+      req.params.modified = true;
+      const getActualPath = (path) =>
+        path.slice(0, path.length - 1 - disguise.length);
+      req.raw.url = getActualPath(req.raw.url);
+      if (req.params.path) req.params.path = getActualPath(req.params.path);
+      if (req.params['*']) req.params['*'] = getActualPath(req.params['*']);
+      reply.type(supportedTypes[disguise]);
+    }
+    return done();
+  });
 
 app.get(serverUrl.pathname + ':path', (req, reply) => {
   // Testing for future features that need cookies to deliver alternate source files.
@@ -186,7 +233,7 @@ app.get(serverUrl.pathname + ':path', (req, reply) => {
 
   // Return the error page if the query is not found in routes.mjs.
   if (reqPath && !(reqPath in pages))
-    return reply.code(404).type('text/html').send(preloaded404);
+    return reply.code(404).type(supportedTypes.default).send(preloaded404);
 
   // Set the index the as the default page. Serve as an html file by default.
   const fileName = reqPath ? pages[reqPath] : pages.index,
@@ -194,31 +241,31 @@ app.get(serverUrl.pathname + ':path', (req, reply) => {
       supportedTypes[fileName.slice(fileName.lastIndexOf('.') + 1)] ||
       supportedTypes.default;
 
-  reply.type(type);
-  if (fileName.indexOf('archive/') === 0)
-    reply.send(tryReadFile('../views/' + fileName, import.meta.url));
-  else reply.send(tryReadFile('../views/dist/' + fileName, import.meta.url));
+  if (req.params.modified) reply.type(supportedTypes[disguise]);
+  else reply.type(type);
+  reply.send(tryReadFile('../views/dist/' + fileName, import.meta.url));
 });
 
 app.get(serverUrl.pathname + 'github/:redirect', (req, reply) => {
   if (req.params.redirect in externalPages.github)
     reply.redirect(externalPages.github[req.params.redirect]);
-  else reply.code(404).type('text/html').send(preloaded404);
+  else reply.code(404).type(supportedTypes.default).send(preloaded404);
 });
 
 if (serverUrl.pathname === '/')
   // Set an error page for invalid paths outside the query string system.
   // If the server URL has a prefix, then avoid doing this for stealth reasons.
   app.setNotFoundHandler((req, reply) => {
-    reply.code(404).type('text/html').send(preloaded404);
+    reply.code(404).type(supportedTypes.default).send(preloaded404);
   });
 else {
   // Apply the following patch(es) if the server URL has a prefix.
 
   // Patch to fix serving index.html.
   app.get(serverUrl.pathname, (req, reply) => {
-    reply.type(supportedTypes.html);
-    reply.send(tryReadFile('../views/dist/' + pages.index, import.meta.url));
+    reply
+      .type(supportedTypes.default)
+      .send(tryReadFile('../views/dist/' + pages.index, import.meta.url));
   });
 }
 
