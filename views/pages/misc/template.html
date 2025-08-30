@@ -14,10 +14,11 @@
 
   <body>
     <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
     <div id="header" class="fullwidth">
       <!--HEADER-->
     </div>
-    <div id="particles-js" class="fullwidth"></div>
+    <div id="background" class="fullwidth"></div>
     <div id="mainbody" class="fullwidth">
       <div class="box text-center"></div>
     </div>
@@ -25,8 +26,9 @@
       <!--FOOTER-->
     </div>
     <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
-    <script src="{{route}}{{assets/js/common.js}}"></script>
-    <script src="{{route}}{{assets/js/csel.js}}"></script>
-    <script src="{{route}}{{assets/js/particlesjs/particles.js}}"></script>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}"></script>
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}"></script>
+    }}
   </body>
 </html>

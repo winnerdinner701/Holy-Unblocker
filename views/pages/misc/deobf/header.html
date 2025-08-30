@@ -1,8 +1,18 @@
-<div class="brand-logo-container"{{ifSEO}}{{ aria-label="Brand Logo"}}>
-  <div class="logo" role="img"{{ifSEO}}{{ aria-label="Holy Unblocker Logo"}}></div>
-    <a href="{{route}}{{/}}" class="brand pulse" title="{{mask}}{{Holy Unblocker Home Page}}"
-    >{{mask}}{{Holy Unblocker v6.8.x}}</a
+<div class="brand-logo-container" {{ifSEO}}{{ aria-label="Brand Logo" }}>
+  <div
+    class="logo"
+    role="img"
+    {{ifSEO}}{{
+    aria-label="Holy Unblocker Logo"
+    }}
+  ></div>
+  <a
+    href="{{route}}{{/}}"
+    class="brand pulse"
+    title="{{mask}}{{Holy Unblocker Home Page}}"
   >
+    {{mask}}{{Holy Unblocker v6.8.x}}
+  </a>
 </div>
 
 <ul class="navbar-1" role="list" aria-label="Primary navigation">
@@ -44,9 +54,7 @@
 <ul class="navbar" role="list">
   <li class="dropdown-parent">
     <div class="pulse white-text">
-      <a href="#" tabindex="0"
-        >More <i class="fas fa-ellipsis-v"></i
-      ></a>
+      <a href="#" tabindex="0">More <i class="fas fa-ellipsis-v"></i></a>
     </div>
     <div
       class="dropdown-child"
@@ -58,26 +66,28 @@
         <li role="menuitem">
           <a
             href="{{route}}{{/documentation}}"
-            title="Documentation - Detailed information and guides"
+            title="{{mask}}{{Documentation - Detailed information and guides}}"
             >Docs</a
           >
         </li>
         <li role="menuitem">
           <a
             href="{{route}}{{/questions}}"
-            title="FAQ - Frequently asked questions and answers"
+            title="{{mask}}{{FAQ - Frequently asked questions and answers}}"
             >FAQ</a
           >
         </li>
         <li role="menuitem">
           <a
             href="{{route}}{{/credits}}"
-            title="Credits - Acknowledgements and contributions"
+            title="{{mask}}{{Credits - Acknowledgements and contributions}}"
             >Credits</a
           >
         </li>
         <li role="menuitem">
-          <a href="{{route}}{{/terms}}" title="Terms of Service - Rules and policies of use"
+          <a
+            href="{{route}}{{/terms}}"
+            title="{{mask}}{{Terms of Service - Rules and policies of use}}"
             >TOS</a
           >
         </li>
