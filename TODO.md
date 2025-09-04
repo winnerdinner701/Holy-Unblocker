@@ -1,76 +1,84 @@
 This will be our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above. Release for production will be v8.x.x and above.
 
-## Code Cleanup
-
-- [x] Remove all current obfuscation in the source code. It needs to be dynamically obfuscated if anything, or not obfuscated at all. This option will be a config option on the server side before rendering with Fastify for a performance focus. Meta elements will have an additonal attribute indicating if they should be moved. This is to ensure a SEO source can be served by config or a source focused on pure censorship evasion.
-- [ ] Optimize the stylesheets and the HTML layout. Add more proper commenting and redivide the code so that it's less hard on the eyes.
-- [ ] Optimize the JS. This time it won't be in one line and will be somewhat thoroughly commented.
-- [x] Restructure navigation scripts to ensure updated proxy functionality is sanitized and effective
-- [x] Particles.js automatically adjusting per display size - done
-- [x] Fix routes.mjs throwing with incorrect paths - done
-- [x] Create test script - done
-- [x] XSS and fingerprinting protection (may need updates) - done
-- [x] Update games navigation JS and page/change to JSON object system - done
-- [ ] Ensure all the original submodules get added back to HU-Archive
-- [x] Mobile support - (welcome screen only, partial/needs work)
-- [ ] SEO overhaul adapted from the v3 SEO Guide format - partial
-- [x] Fastify routes modified to ensure perfect SEO. This means absolute paths such as /example instead of ?z - done
-- [x] Randomize the \_\_uv$config global, and optionally randomize the UV prefix and URL encoding via cookies
-
 ## Proxy/Site Functionality
 
+- [ ] Update to use scramjetFrame instead of our own window handling
+- [ ] Implement wisp python to the project instead of the unreliable wisp-server-node
+- [ ] Add booksmark menu (source wise already present pretty much)
+- [ ] Add Chii + ensuring users can access devtools while browsing - partial
+- [ ] Setting to open multiple stealth frames; basically about:blank but using our system. Pops out in another tab
+- [ ] Omnibox should state what the current site the user is on like a proper URL bar 
+- [ ] Improve adblocking functions on site using Workerware + a pre-bundled uBlock Origin
+- [ ] Add a "website self-destruct" button to the settings menu
+- [ ] Transport Options Swapping on Frame (Settings Menu doesn't swap)
+- [x] Fix keyword/descriptor randomisation - done
+- [x] Adapt Wisp protocol replacing bare which is very unsecure - done
+- [x] Improved error handling for proxy errors - done
 - [x] Ensure Ultraviolet is updated to support bare-mux and wisp - done
 - [x] Ensure Scramjet is added and works together with UV's implementation - done
-= [x] Refactor register-sw.js - done
+- [x] Adapt Scramjet as main proxy for the project - done
+- [x] Refactor register-sw.js - done
 - [x] Add Rammerhead support - done
 - [x] Fix slow Ultraviolet speeds despite being local; something on the backend?? - done
 - [x] Fix Ultraviolet on Firefox - (partial/needs work)
 - [x] Adapt Applications page to use Scramjet (for Reddit, YouTube, Discord) - done
-- [x] libcurl, epoxy and all that fun stuff - done
-- [x] socks5/tor routing option that can be configured (enabled) via either a cookie or pathname as a settings meny option - done
-- [x] socks5 regional proxy implementation - done
-- [ ] Update games page content to 10000 games
+- [x] Added libcurl transport and epoxy transport to meet standards of SJ + Wisp - done
+- [x] SOCKS5/Tor routing option that can be configured as a settings menu option - done
+- [x] SOCKS5 regional proxy implementation - done
 - [x] Update Applications page to reflect modern fast links (use examples from the modern web proxy base) - done. can be expanded later
-- [x] Update settings menu again to make more room for more features
+- [x] Update settings menu again to make more room for more features - done
 - [x] Update csel.js (after Setting menu redesign) to support custom transports, icon swap, routing - done
-- [x] Update csel.js to support network based adblocking (partial/needs work)
-- [ ] Add a "website self-destruct" button to the settings menu
 - [x] Flesh out and rework the UV / Scramjet / bare client error page - done
-- [x] Update sw.js to support workerware (https://github.com/MercuryWorkshop/workerware)-- This is not done however we have our own middleware system implemented for adblocking, etc. 
-- [ ] Omnibox autoupdate script (for the Google/Bing style auto suggest feature)
-- [ ] Omnibar functionality (back and forward navigation, settings menu and create new stealth page with URL)
-- [ ] Games library will feature 10000 items; 5000 flash games and 5000 other game types
-- [ ] Improve adblocking functions on site using AnuraOS standards
-- [x] Revamp the Stealth Frame with a slight animation (ease in and then the wheeling loading with a gradient fading away once its loaded or shows the error page LOL), a loading wheel/page and lastly a omnibox widget. It will have like nav buttons, some of the settings from the settings menu, a home button, a button that brings up the Setting menu and be in a designed position. Intent is to reduce the back/forth nature that users have to do currently making it more tedious to use the site. - partial. needs functionality. 
+- [x] Update sw.js to support workerware (https://github.com/MercuryWorkshop/workerware)-- This is not done however we have our own middleware system implemented for adblocking, etc.
+- [x] Omnibox autoupdate script (for the Google/Bing style auto suggest feature) - done
+- [x] Omnibar functionality (back and forward navigation, settings menu and create new stealth page with URL) - done
+- [x] Games library will feature new games - done
+- [x] Servers now utilise NextDNS w/ ads and malware blocked; anycast + low latency - done
+- [x] Revamp the Stealth Frame with a slight animation (ease in and then the wheeling loading with a gradient fading away once its loaded or shows the error page LOL), a loading wheel/page and lastly a omnibox widget. It will have like nav buttons, some of the settings from the settings menu, a home button, a button that brings up the Setting menu and be in a designed position. Intent is to reduce the back/forth nature that users have to do currently making it more tedious to use the site. - partial. needs functionality.
 
+## Code Cleanup
+
+- [x] Optimize the JS. This time it won't be in one line and will be somewhat thoroughly commented.
+- [x] Ensure all the original submodules get added back to HU-Archive
+- [x] SEO overhaul adapted from the v3 SEO Guide format - partial
+- [x] Optimize the stylesheets and the HTML layout. Add more proper commenting and redivide the code so that it's less hard on the eyes.
+- [x] Remove all current obfuscation in the source code. It needs to be dynamically obfuscated if anything, or not obfuscated at all. This option will be a config option on the server side before rendering with Fastify for a performance focus. Meta elements will have an additonal attribute indicating if they should be moved. This is to ensure a SEO source can be served by config or a source focused on pure censorship evasion.
+- [x] Restructure navigation scripts to ensure updated proxy functionality is sanitized and effective - done
+- [x] Particles.js automatically adjusting per display size - done
+- [x] Fix routes.mjs throwing with incorrect paths - done
+- [x] Create CI testing script - done
+- [x] XSS and fingerprinting protection (may need updates) - done
+- [x] Greatly improved native source rewrites and routing - done
+- [x] Update games navigation JS and page/change to JSON object system - done
+- [x] Mobile support - (partial)
+- [x] Fastify routes modified to ensure perfect SEO. This means absolute paths such as /example instead of ?z - done
+- [x] Randomize the \_\_uv$config global, and optionally randomize the UV prefix and URL encoding via cookies
 
 ## Site Redesign
 
+- [x] Documentation on-site + Getting Started information updated (Tor, etc.) - partial; good enough
+- [x] Update colors + add themes - done
 - [x] Landing Cards - done
 - [x] Change fonts to cleaner look
 - [x] Add more AOS interactions on scroll or hover
 - [x] Add subtle noise to background elements
-- [ ] Update colors + add themes
 - [x] Toggle elements
 - [x] Other card options
 - [x] Radial blur elements
-- [ ] Code standard examples
+- [x] Code standard examples - in source
 - [x] Horizontal/general movement on scroll with AOS
 - [x] Showcase dev dependencies
-- [ ] Update icons
-- [x] Landing Page - (partial/needs work)
-- [x] Settings Menu - (partial/needs work)
+- [x] Update branding and icons
+- [x] Landing Page 
+- [x] Settings Menu - partial I want to fix some colours
 - [x] More Dropdown Menu
 - [x] Web Proxies page
 - [x] Application page
-- [ ] Hosting page
-- [ ] Resources page
-- [ ] Games Library page
-- [ ] Emulators Library page
-- [ ] Emu Library page
-- [ ] Web Games page
+- [x] Games Library page
+- [x] Emulators Library page
+- [x] Emu Library page
+- [x] Web Games page
 - [x] Flash Games page
-- [ ] Documentation on-site + Getting Started information updated (Tor, etc.)
 - [x] FAQ page
 - [x] Credits page
 - [x] TOS page
@@ -79,9 +87,8 @@ This will be our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above
 
 ## Community Requests
 
-- [ ] Add [Quake WASM](https://github.com/GMH-Code/Quake-WASM)
-- [ ] Celeste WASM
-- [ ] Doom WASM
+- [x] Add [Quake WASM](https://github.com/GMH-Code/Quake-WASM)
+- [x] Celeste WASM
 
 ## Changelog (Old; too lazy to type it all out now)
 

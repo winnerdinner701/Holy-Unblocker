@@ -4,7 +4,13 @@ import wisp from 'wisp-server-node';
 import createRammerhead from '../lib/rammerhead/src/server/index.js';
 import fastifyHelmet from '@fastify/helmet';
 import fastifyStatic from '@fastify/static';
-import { serverUrl, pages, externalPages, getAltPrefix } from './routes.mjs';
+import {
+  config,
+  serverUrl,
+  pages,
+  externalPages,
+  getAltPrefix,
+} from './routes.mjs';
 import { tryReadFile, preloaded404 } from './templates.mjs';
 import { fileURLToPath } from 'node:url';
 import { existsSync, unlinkSync } from 'node:fs';
@@ -77,8 +83,10 @@ const serverFactory = (handler) => {
 
 // Set logger to true for logs.
 const app = Fastify({
-  ignoreDuplicateSlashes: true,
-  ignoreTrailingSlash: true,
+  routerOptions: {
+    ignoreDuplicateSlashes: true,
+    ignoreTrailingSlash: true,
+  },
   logger: false,
   serverFactory: serverFactory,
 });
@@ -98,7 +106,16 @@ app.register(fastifyStatic, {
 
 // All entries in the dist folder are created with source rewrites.
 // Minified scripts are also served here, if minification is enabled.
-['assets', 'uv', 'scram', 'epoxy', 'libcurl', 'baremux'].forEach((prefix) => {
+[
+  'assets',
+  'archive',
+  'uv',
+  'scram',
+  'epoxy',
+  'libcurl',
+  'baremux',
+  'chii',
+].forEach((prefix) => {
   app.register(fastifyStatic, {
     root: fileURLToPath(new URL('../views/dist/' + prefix, import.meta.url)),
     prefix: getAltPrefix(prefix, serverUrl.pathname),
@@ -107,14 +124,8 @@ app.register(fastifyStatic, {
 });
 
 app.register(fastifyStatic, {
-  root: fileURLToPath(new URL('../views/archive', import.meta.url)),
-  prefix: getAltPrefix('archive', serverUrl.pathname),
-  decorateReply: false,
-});
-
-app.register(fastifyStatic, {
   root: fileURLToPath(
-    new URL('../views/archive/gfiles/rarch', import.meta.url)
+    new URL('../views/dist/archive/gfiles/rarch', import.meta.url)
   ),
   prefix: getAltPrefix('serving', serverUrl.pathname),
   decorateReply: false,
@@ -124,7 +135,7 @@ app.register(fastifyStatic, {
 ['cores', 'info', 'roms'].forEach((prefix) => {
   app.register(fastifyStatic, {
     root: fileURLToPath(
-      new URL('../views/archive/gfiles/rarch/' + prefix, import.meta.url)
+      new URL('../views/dist/archive/gfiles/rarch/' + prefix, import.meta.url)
     ),
     prefix: getAltPrefix(prefix, serverUrl.pathname),
     decorateReply: false,
@@ -133,7 +144,7 @@ app.register(fastifyStatic, {
 
 app.register(fastifyStatic, {
   root: fileURLToPath(
-    new URL('../views/archive/gfiles/rarch/cores', import.meta.url)
+    new URL('../views/dist/archive/gfiles/rarch/cores', import.meta.url)
   ),
   prefix: getAltPrefix('uauth', serverUrl.pathname),
   decorateReply: false,
@@ -149,12 +160,68 @@ app.register(fastifyStatic, {
  */
 
 const supportedTypes = {
-  default: 'text/html',
-  html: 'text/html',
-  txt: 'text/plain',
-  xml: 'application/xml',
-  ico: 'image/vnd.microsoft.icon',
-};
+    default: config.disguiseFiles ? 'image/vnd.microsoft.icon' : 'text/html',
+    html: 'text/html',
+    txt: 'text/plain',
+    xml: 'application/xml',
+    ico: 'image/vnd.microsoft.icon',
+  },
+  disguise = 'ico';
+
+if (config.disguiseFiles) {
+  const getActualPath = (path) =>
+      path.slice(0, path.length - 1 - disguise.length),
+    shouldNotHandle = new RegExp(`\\.(?!html$|${disguise}$)[\\w-]+$`, 'i'),
+    loaderFile = tryReadFile(
+      '../views/dist/pages/misc/deobf/loader.html',
+      import.meta.url,
+      false
+    );
+  let exemptDirs = [
+      'assets',
+      'uv',
+      'scram',
+      'epoxy',
+      'libcurl',
+      'baremux',
+      'wisp',
+      'chii',
+    ].map((dir) => getAltPrefix(dir, serverUrl.pathname).slice(1, -1)),
+    exemptPages = ['login', 'test-shutdown', 'favicon.ico'];
+  for (const [key, value] of Object.entries(externalPages))
+    if ('string' === typeof value) exemptPages.push(key);
+    else exemptDirs.push(key);
+  for (const path of rammerheadScopes)
+    if (!shouldNotHandle.test(path)) exemptDirs.push(path.slice(1));
+  exemptPages = exemptPages.concat(exemptDirs);
+  if (pages.default === 'login') exemptPages.push('');
+  app.addHook('preHandler', (req, reply, done) => {
+    if (req.params.modified) return done();
+    const reqPath = new URL(req.url, serverUrl).pathname.slice(
+      serverUrl.pathname.length
+    );
+    if (
+      shouldNotHandle.test(reqPath) ||
+      exemptDirs.some((dir) => reqPath.indexOf(dir + '/') === 0) ||
+      exemptPages.includes(reqPath) ||
+      rammerheadSession.test(serverUrl.pathname + reqPath)
+    )
+      return done();
+
+    if (!reqPath.endsWith('.' + disguise)) {
+      reply.type(supportedTypes.html).send(loaderFile);
+      reply.hijack();
+      return done();
+    } else if (!(reqPath in pages) && !reqPath.endsWith('favicon.ico')) {
+      req.params.modified = true;
+      req.raw.url = getActualPath(req.raw.url);
+      if (req.params.path) req.params.path = getActualPath(req.params.path);
+      if (req.params['*']) req.params['*'] = getActualPath(req.params['*']);
+      reply.type(supportedTypes[disguise]);
+    }
+    return done();
+  });
+}
 
 app.get(serverUrl.pathname + ':path', (req, reply) => {
   // Testing for future features that need cookies to deliver alternate source files.
@@ -168,7 +235,16 @@ app.get(serverUrl.pathname + ':path', (req, reply) => {
 
   const reqPath = req.params.path;
 
+  // Ignore browsers' automatic requests to favicon.ico, since it does not exist.
+  // This approach is needed for certain pages to not have an icon.
+  if (reqPath === 'favicon.ico') {
+    reply.send();
+    return reply.hijack();
+  }
+
   if (reqPath in externalPages) {
+    if (req.params.modified)
+      return reply.code(404).type(supportedTypes.html).send(preloaded404);
     let externalRoute = externalPages[reqPath];
     if (typeof externalRoute !== 'string')
       externalRoute = externalRoute.default;
@@ -186,41 +262,45 @@ app.get(serverUrl.pathname + ':path', (req, reply) => {
 
   // Return the error page if the query is not found in routes.mjs.
   if (reqPath && !(reqPath in pages))
-    return reply.code(404).type('text/html').send(preloaded404);
+    return reply.code(404).type(supportedTypes.default).send(preloaded404);
 
-  // Set the index the as the default page. Serve as an html file by default.
-  const fileName = reqPath ? pages[reqPath] : pages.index,
+  // Serve the default page if the path is the default path.
+  const fileName = reqPath ? pages[reqPath] : pages[pages.default],
     type =
       supportedTypes[fileName.slice(fileName.lastIndexOf('.') + 1)] ||
       supportedTypes.default;
 
-  reply.type(type);
-  if (fileName.indexOf('archive/') === 0)
-    reply.send(tryReadFile('../views/' + fileName, import.meta.url));
-  else reply.send(tryReadFile('../views/dist/' + fileName, import.meta.url));
+  if (req.params.modified) reply.type(supportedTypes[disguise]);
+  else reply.type(type);
+  reply.send(tryReadFile('../views/dist/' + fileName, import.meta.url));
 });
 
 app.get(serverUrl.pathname + 'github/:redirect', (req, reply) => {
   if (req.params.redirect in externalPages.github)
     reply.redirect(externalPages.github[req.params.redirect]);
-  else reply.code(404).type('text/html').send(preloaded404);
+  else reply.code(404).type(supportedTypes.default).send(preloaded404);
 });
 
 if (serverUrl.pathname === '/')
   // Set an error page for invalid paths outside the query string system.
   // If the server URL has a prefix, then avoid doing this for stealth reasons.
   app.setNotFoundHandler((req, reply) => {
-    reply.code(404).type('text/html').send(preloaded404);
+    reply.code(404).type(supportedTypes.default).send(preloaded404);
   });
 else {
   // Apply the following patch(es) if the server URL has a prefix.
 
   // Patch to fix serving index.html.
   app.get(serverUrl.pathname, (req, reply) => {
-    reply.type(supportedTypes.html);
-    reply.send(tryReadFile('../views/dist/' + pages.index, import.meta.url));
+    reply
+      .type(supportedTypes.default)
+      .send(tryReadFile('../views/dist/' + pages.index, import.meta.url));
   });
 }
 
 app.listen({ port: serverUrl.port, host: serverUrl.hostname });
 console.log(`Holy Unblocker is listening on port ${serverUrl.port}.`);
+if (config.disguiseFiles)
+  console.log(
+    'disguiseFiles is enabled. Visit src/routes.mjs to see the entry point, listed within the pages variable.'
+  );

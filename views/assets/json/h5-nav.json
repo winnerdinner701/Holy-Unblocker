@@ -5,24 +5,14 @@
     "img": "darkroom.webp"
   },
   {
-    "name": "Minecraft: Java Edition (1.12.2)",
-    "path": "mcjava1122/",
-    "img": "mcnow.webp"
-  },
-  {
     "name": "Celeste Web",
-    "custom": "celeste",
+    "path": "webleste/",
     "img": "celeste.webp"
   },
   {
     "name": "Terraria Web",
-    "custom": "terraria",
+    "path": "terraria/",
     "img": "terraria.webp"
-  },
-  {
-    "name": "Minecraft: Java Edition (1.8.8)",
-    "path": "mcjava188/",
-    "img": "mcnow.webp"
   },
   {
     "name": "Gopher Cart",
@@ -105,6 +95,11 @@
     "img": "snake.webp"
   },
   {
+    "name": "Half Life 1",
+    "path": "halflife/",
+    "img": "halflife.webp"
+  },
+  {
     "name": "Super Mario 64",
     "path": "sm64/",
     "img": "sm64.webp"
@@ -156,6 +151,11 @@
     "img": "glitch2.webp"
   },
   {
+    "name": "Candybox 2",
+    "path": "candybox/",
+    "img": "candybox2.webp"
+  },
+  {
     "name": "Pac-man",
     "path": "pacman/",
     "img": "pcma.webp",
@@ -190,6 +190,11 @@
     "name": "The House",
     "path": "househorror/",
     "img": "thehouse.webp"
+  },
+  {
+    "name": "Martian Mayhem",
+    "path": "martianmayhem/",
+    "img": "martianmayhem.webp"
   },
   {
     "name": "The Pond",
@@ -235,6 +240,11 @@
     "name": "Chess",
     "path": "chess/",
     "img": "chess2.webp"
+  },
+  {
+    "name": "Quake III Arena",
+    "path": "quake3/",
+    "img": "quake3.webp"
   },
   {
     "name": "Connect 3",

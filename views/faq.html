@@ -9,15 +9,21 @@
     />
     }}
     <!--HEAD-CONTENT-->
-    <script src="https://unpkg.com/tsparticles@3.8.1/tsparticles.bundle.min.js"></script>
+    <script src="https://unpkg.com/tsparticles@3.8.1/tsparticles.bundle.min.js" defer data-module></script>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/csel.js}}{{inline}}" defer></script>
+    <script src="{{route}}{{assets/js/common.js}}{{inline}}" defer></script>
+    }}
   </head>
 
   <body>
     <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
+    <!--ANTI-EXFIL-->
     <div id="header" class="fullwidth">
       <!--HEADER-->
     </div>
-    <div id="particles-js" class="fullwidth"></div>
+    <div id="background" class="fullwidth"></div>
+    <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
     <div id="mainbody" class="box-hero">
       <div id="documentation" class="hero-grid-container">
         <div class="box-hero">
@@ -31,9 +37,8 @@
       <!--FOOTER-->
     </div>
     <!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->
-    <script src="{{route}}{{assets/js/common.js}}"></script>
-    <script src="{{route}}{{assets/js/csel.js}}"></script>
-    <script src="{{route}}{{assets/js/card.js}}"></script>
-    <script defer="defer" src="{{route}}{{assets/js/particlesjs/particles.js}}"></script>
+    {{inline}}{{
+    <script src="{{route}}{{assets/js/card.js}}{{inline}}"></script>
+    }}
   </body>
 </html>

@@ -8,16 +8,27 @@ import {
   rmSync,
   existsSync,
 } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { exec, fork } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { build } from 'esbuild';
-import { config, serverUrl, flatAltPaths } from './src/routes.mjs';
+import {
+  config,
+  serverUrl,
+  flatAltPaths,
+  splashRandom,
+} from './src/routes.mjs';
 import { epoxyPath } from '@mercuryworkshop/epoxy-transport';
 import { libcurlPath } from '@mercuryworkshop/libcurl-transport';
 import { baremuxPath } from '@mercuryworkshop/bare-mux/node';
 import { uvPath } from '@titaniumnetwork-dev/ultraviolet';
 import paintSource from './src/source-rewrites.mjs';
 import { loadTemplates, tryReadFile } from './src/templates.mjs';
+
+const scramjetPath = join(
+  dirname(fileURLToPath(import.meta.url)),
+  'node_modules/@mercuryworkshop/scramjet/dist'
+);
 
 // This constant is copied over from /src/server.mjs.
 const shutdown = fileURLToPath(new URL('./src/.shutdown', import.meta.url));
@@ -115,15 +126,30 @@ commands: for (let i = 2; i < process.argv.length; i++)
       rmSync(dist, { force: true, recursive: true });
       mkdirSync(dist);
 
-      const ignoredDirectories = ['dist', 'archive'];
+      /* The archive directory is excluded from this process, since source
+       * rewrites are not intended to be used by any of those files.
+       * Assets are compiled separately, before the rest of the files.
+       */
+      const ignoredDirectories = ['dist', 'assets', 'uv', 'scram', 'archive'];
+      const ignoredFileTypes = /\.map$/;
 
-      const compile = (dir, base = '', outDir = '', initialDir = dir) =>
+      const compile = (
+        dir,
+        base = '',
+        outDir = '',
+        initialDir = dir,
+        applyRewrites = initialDir === './views'
+      ) =>
         readdirSync(base + dir).forEach((file) => {
           let oldLocation = new URL(
             file,
             new URL(base + dir + '/', import.meta.url)
           );
-          if (ignoredDirectories.includes(file) || /\.map$/.test(file)) return;
+          if (
+            (ignoredDirectories.includes(file) && applyRewrites) ||
+            ignoredFileTypes.test(file)
+          )
+            return;
           const fileStats = lstatSync(oldLocation),
             targetPath = fileURLToPath(
               new URL(
@@ -135,25 +161,27 @@ commands: for (let i = 2; i < process.argv.length; i++)
               )
             );
           if (fileStats.isFile() && !existsSync(targetPath))
-            if (
-              /\.(?:html|js|css|json|txt|xml)$/.test(file) &&
-              initialDir === './views'
-            )
+            if (/\.(?:html|js|css|json|txt|xml)$/.test(file) && applyRewrites)
               writeFileSync(
                 targetPath,
                 paintSource(
                   loadTemplates(
-                    tryReadFile(base + dir + '/' + file, import.meta.url)
+                    tryReadFile(base + dir + '/' + file, import.meta.url, false)
                   )
                 )
               );
             else copyFileSync(base + dir + '/' + file, targetPath);
           else if (fileStats.isDirectory()) {
             if (!existsSync(targetPath)) mkdirSync(targetPath);
-            compile(file, base + dir + '/', outDir, initialDir);
+            compile(file, base + dir + '/', outDir, initialDir, applyRewrites);
           }
         });
-      compile('./views');
+
+      const localAssetDirs = ['assets', 'scram', 'uv'];
+      for (const path of localAssetDirs) {
+        mkdirSync('./views/dist/' + path);
+        compile('./views/' + path, '', path + '/', './views/' + path, true);
+      }
 
       // Combine scripts from the corresponding node modules into the same
       // dist-generated directories for compiling, and avoid overwriting files.
@@ -162,16 +190,19 @@ commands: for (let i = 2; i < process.argv.length; i++)
         libcurl: libcurlPath,
         baremux: baremuxPath,
         uv: uvPath,
+        scram: scramjetPath,
+        chii: 'node_modules/chii',
       };
       for (const path of Object.entries(compilePaths)) {
         const prefix = path[0] + '/',
           prefixUrl = new URL('./views/dist/' + prefix, import.meta.url);
         if (!existsSync(prefixUrl)) mkdirSync(prefixUrl);
+
         compile(path[1].slice(path[1].indexOf('node_modules')), '', prefix);
       }
 
       // Minify the scripts and stylesheets upon compiling, if enabled in config.
-      if (config.minifyScripts) {
+      if (config.minifyScripts)
         await build({
           entryPoints: [
             './views/dist/uv/**/*.js',
@@ -189,6 +220,51 @@ commands: for (let i = 2; i < process.argv.length; i++)
           outdir: dist,
           allowOverwrite: true,
         });
+
+      compile('./views');
+
+      // Compile the archive directory separately.
+      mkdirSync('./views/dist/archive');
+      if (existsSync('./views/archive'))
+        compile('./views/archive', '', 'archive/');
+
+      const createFile = (location, text) => {
+        writeFileSync(
+          fileURLToPath(new URL('./views/dist/' + location, import.meta.url)),
+          paintSource(loadTemplates(text))
+        );
+      };
+
+      createFile('assets/json/splash.json', JSON.stringify(splashRandom));
+
+      if (config.disguiseFiles) {
+        const compress = async (dir, recursive = false) => {
+          for (const file of readdirSync(dir)) {
+            const fileLocation = dir + '/' + file;
+            if (file.endsWith('.html'))
+              writeFileSync(
+                fileLocation,
+                Buffer.from(
+                  await new Response(
+                    new Blob([
+                      tryReadFile(fileLocation, import.meta.url, false),
+                    ])
+                      .stream()
+                      .pipeThrough(new CompressionStream('gzip'))
+                  ).arrayBuffer()
+                )
+              );
+            else if (
+              recursive &&
+              lstatSync(fileLocation).isDirectory() &&
+              file !== 'deobf'
+            )
+              await compress(fileLocation, true);
+          }
+        };
+        await compress('./views/dist');
+        await compress('./views/dist/pages', true);
+        await compress('./views/dist/archive', true);
       }
 
       break;
@@ -206,7 +282,7 @@ commands: for (let i = 2; i < process.argv.length; i++)
           rmSync(targetPath, { force: true, recursive: true });
           mkdirSync(targetPath);
           writeFileSync(
-            fileURLToPath(new URL(targetDir + '/.gitkeep', import.meta.url)), 
+            fileURLToPath(new URL(targetDir + '/.gitkeep', import.meta.url)),
             ''
           );
           console.log(
@@ -216,6 +292,16 @@ commands: for (let i = 2; i < process.argv.length; i++)
         } catch (e) {
           console.error('[Clean Error]', e);
         }
+      break;
+    }
+
+    case 'format': {
+      exec('npx prettier --write .', (error, stdout) => {
+        if (error) {
+          console.error('[Clean Error]', error);
+        }
+        console.log('[Clean]', stdout);
+      });
       break;
     }
 

@@ -19,9 +19,9 @@ const getDomain = () =>
     location.host.replace(/^(?:www|edu|cooking|beta)\./, ''),
   // This is used for stealth mode when visiting external sites.
   goFrame = (url) => {
-    localStorage.setItem('hu-lts-frame-url', url);
+    localStorage.setItem('{{hu-lts}}-frame-url', url);
     if (location.pathname !== '{{route}}{{/s}}')
-      location.href = '{{route}}{{/s}}';
+      location.href = '{{route}}{{/s}}?cache={{cacheVal}}';
     else document.getElementById('frame').src = url;
   },
   /* Used to set functions for the goProx object at the bottom.
@@ -59,7 +59,7 @@ const getDomain = () =>
 
 /* READ SETTINGS */
 
-const storageId = 'hu-lts-storage',
+const storageId = '{{hu-lts}}-storage',
   storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
   readStorage = (name) => storageObject()[name];
 
@@ -72,7 +72,7 @@ const searchEngines = Object.freeze({
     '{{DuckDuckGo}}': 'duckduckgo.com/?q=',
     '{{Brave}}': 'search.brave.com/search?q=',
   }),
-  defaultSearch = '{{Brave}}',
+  defaultSearch = '{{defaultSearch}}',
   autocompletes = Object.freeze({
     // Startpage has used both Google's and Bing's autocomplete.
     // For now, just use Bing.
@@ -513,10 +513,9 @@ const RammerheadEncode = async (baseUrl) => {
  *
  * goProx.searx();
  */
-addEventListener('DOMContentLoaded', async () => {
+const preparePage = async () => {
   // This won't break the service workers as they store the variable separately.
   uvConfig = self['{{__uv$config}}'];
-  delete self['{{__uv$config}}'];
   sjObject = self['$scramjetLoadController'];
   if (sjObject)
     sjEncode = new (sjObject().ScramjetController)({
@@ -541,11 +540,9 @@ addEventListener('DOMContentLoaded', async () => {
 
     osu: urlHandler(location.origin + '{{route}}{{/archive/osu}}'),
 
-    celeste: urlHandler(location.origin + '{{route}}{{/archive/celeste}}'),
-
-    terraria: urlHandler(location.origin + '{{route}}{{/archive/terraria}}'),
-
     agar: urlHandler(sjUrl('https://agar.io')),
+
+    tru: urlHandler(sjUrl('https://truffled.lol/g')),
 
     prison: urlHandler(sjUrl('https://vimlark.itch.io/pick-up-prison')),
 
@@ -570,6 +567,16 @@ addEventListener('DOMContentLoaded', async () => {
     hianime: urlHandler(sjUrl('https://www.hianime.to')),
 
     twitter: urlHandler(sjUrl('https://twitter.com')),
+
+    twitch: urlHandler(sjUrl('https://www.twitch.tv')),
+
+    instagram: urlHandler(sjUrl('https://www.instagram.com')),
+
+    reddit: urlHandler(sjUrl('https://www.reddit.com')),
+
+    wikipedia: urlHandler(sjUrl('https://www.wikiwand.com')),
+
+    newgrounds: urlHandler(sjUrl('https://www.newgrounds.com')),
   });
 
   // Call a function after a given number of service workers are active.
@@ -771,11 +778,16 @@ addEventListener('DOMContentLoaded', async () => {
   prSet('pr-tt', 'tiktok');
   prSet('pr-ha', 'hianime');
   prSet('pr-tw', 'twitter');
+  prSet('pr-tc', 'twitch');
+  prSet('pr-ig', 'instagram');
+  prSet('pr-rt', 'reddit');
+  prSet('pr-wa', 'wikipedia');
+  prSet('pr-ng', 'newgrounds');
 
   // Load the frame for stealth mode if it exists.
   const windowFrame = document.getElementById('frame'),
     loadFrame = () => {
-      windowFrame.src = localStorage.getItem('hu-lts-frame-url');
+      windowFrame.src = localStorage.getItem('{{hu-lts}}-frame-url');
       return true;
     };
   if (windowFrame) {
@@ -793,15 +805,61 @@ addEventListener('DOMContentLoaded', async () => {
     else loadFrame();
   }
 
+  const useModule = (moduleFunc, tries = 0) => {
+    try {
+      moduleFunc();
+    } catch (e) {
+      if (tries <= 5)
+        setTimeout(() => {
+          useModule(moduleFunc, tries + 1);
+        }, 600);
+    }
+  };
+
+  if (document.getElementsByClassName('tippy-button').length >= 0)
+    useModule(() => {
+      tippy('.tippy-button', {
+        delay: 50,
+        animateFill: true,
+        placement: 'bottom',
+      });
+    });
+  if (document.getElementsByClassName('pr-tippy').length >= 0)
+    useModule(() => {
+      tippy('.pr-tippy', {
+        delay: 50,
+        animateFill: true,
+        placement: 'bottom',
+      });
+    });
+
+  const banner = document.getElementById('banner');
+  if (banner) {
+    useModule(() => {
+      AOS.init();
+    });
+
+    fetch('{{route}}{{/assets/json/splash.json}}', {
+      mode: 'same-origin',
+    }).then((response) => {
+      response.json().then((splashList) => {
+        banner.firstElementChild.innerHTML =
+          splashList[(Math.random() * splashList.length) | 0];
+      });
+    });
+  }
+
   // Load in relevant JSON files used to organize large sets of data.
   // This first one is for links, whereas the rest are for navigation menus.
-  const huLinks = await fetch('{{route}}{{/assets/json/links.json}}', {
+  fetch('{{route}}{{/assets/json/links.json}}', {
     mode: 'same-origin',
-  }).then((response) => response.json());
-
-  for (let items = Object.entries(huLinks), i = 0; i < items.length; i++)
-    // Replace all placeholder links with the corresponding entry in huLinks.
-    (document.getElementById(items[i][0]) || {}).href = items[i][1];
+  }).then((response) => {
+    response.json().then((huLinks) => {
+      for (let items = Object.entries(huLinks), i = 0; i < items.length; i++)
+        // Replace all placeholder links with the corresponding entry in huLinks.
+        (document.getElementById(items[i][0]) || {}).href = items[i][1];
+    });
+  });
 
   const navLists = {
     // Pair an element ID with a JSON file name. They are identical for now.
@@ -809,6 +867,7 @@ addEventListener('DOMContentLoaded', async () => {
     'emulib-nav': 'emulib-nav',
     'flash-nav': 'flash-nav',
     'h5-nav': 'h5-nav',
+    'par-nav': 'par-nav',
   };
 
   for (const [listId, filename] of Object.entries(navLists)) {
@@ -825,12 +884,14 @@ addEventListener('DOMContentLoaded', async () => {
       switch (filename) {
         case 'emu-nav':
         case 'emulib-nav':
+        case 'par-nav':
         case 'h5-nav': {
           const dirnames = {
               // Set the directory of where each item of the corresponding JSON
               // list will be retrieved from.
               'emu-nav': 'emu',
               'emulib-nav': 'emulib',
+              'par-nav': 'par',
               'h5-nav': 'h5g',
             },
             dir = dirnames[filename],
@@ -849,18 +910,31 @@ addEventListener('DOMContentLoaded', async () => {
               a = document.createElement('a'),
               img = document.createElement('img'),
               title = document.createElement('h3');
+            ((desc = document.createElement('p')),
+              (credits = document.createElement('p')));
 
             a.href = '#';
             img.src = `{{route}}{{/assets/img/}}${dir}/` + item.img;
             title.textContent = item.name;
+            desc.textContent = item.description;
+            credits.textContent = item.credits;
+
+            if (filename === 'par-nav') {
+              if (item.credits === 'truf')
+                desc.innerHTML +=
+                  '<br>{{mask}}{{Credits: Check out the full site at }}<a target="_blank" href="{{route}}{{/truffled}}">{{mask}}{{truffled.lol}}</a> //{{mask}}{{ discord.gg/vVqY36mzvj}}';
+            }
 
             a.appendChild(img);
             a.appendChild(title);
+            a.appendChild(desc);
 
             // Which function is used for the click event is determined by
             // the corresponding location/index in the dirnames object.
             const functionsList = [
+              // emu-nav
               () => goFrame(item.path),
+              // emulib-nav
               () =>
                 goFrame(
                   '{{route}}{{/webretro}}?core=' +
@@ -868,7 +942,12 @@ addEventListener('DOMContentLoaded', async () => {
                     '&rom=' +
                     item.rom
                 ),
-              item.custom
+              // par-nav
+              item.custom && goProx[item.custom]
+                ? () => goProx[item.custom]('stealth')
+                : () => {},
+              // h5-nav
+              item.custom && goProx[item.custom]
                 ? () => goProx[item.custom]('stealth')
                 : () => goFrame('{{route}}{{/archive/g/}}' + item.path),
             ];
@@ -908,5 +987,8 @@ addEventListener('DOMContentLoaded', async () => {
       }
     }
   }
-});
+};
+if ('loading' === document.readyState)
+  addEventListener('DOMContentLoaded', preparePage);
+else preparePage();
 })();

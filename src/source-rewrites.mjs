@@ -1,3 +1,4 @@
+import { existsSync, readFileSync } from 'node:fs';
 import {
   config,
   serverUrl,
@@ -9,7 +10,7 @@ import {
   textMasks,
   splashRandom,
   cacheBustList,
-  VersionValue,
+  versionValue,
   uvError,
   sjError,
 } from './routes.mjs';
@@ -26,22 +27,31 @@ const regExpEscape = /[-[\]{}()*+?.,\\^$#\s]/g,
   basicStrEscape = /["'`$\\]/g,
   charset = /&#173;|&#8203;|&shy;|<wbr>/gi,
   subtermsByCaps = /[A-Z]?[^A-Z]+|[A-Z]/g,
-  subtermsByVowels = /(?<=[AEIOUYaeiouy])/g,
+  subtermsByVowels = /(?<=[AEIOUYaeiouy])(?!$)/g,
   termsBySpaces = /\S+/g,
   containsMask = /&#\d+;|&#x[A-z\d]+;|&[A-z]+;/,
   getEndPoint = /((?<![^\/])github\/)?[^\/]+$/,
   getPaths = /[^\/]+(?=\/)/g,
   getAbsoluteRoot = /^~?\/+|^~$|^(?!\.\/)/,
+  getRoutePath = /(?<={{route}}{{\s*)[^}\s]+(?=\s*}})/,
+  getAttrPath = /(?<=(?:src|href)=(["']?))[\w\.~:\/\?#[\]@!$&()*+,;%=-]+(?=\1)/,
+  getAttrValues = /=(['"])(?:(?!\1)[^])+\1/g,
+  getNodesByLine = /(?<=^\s*)\S.*?(?=\s*$)/gm,
+  routeConditions = {
+    inline: config.disguiseFiles && config.minifyScripts,
+  },
   applyInsert = (str, insertFunction, numArgs = 0) => {
     const mode = 'function' === typeof insertFunction,
       keyword = mode ? insertFunction.name : insertFunction,
       replaceParams1 = new RegExp(
-        `[^\\S\\n]*{{${keyword}}}\\s*` +
-          '\\s*{{\\s*\\n((?:(?!}})[^])*\\n)\\s*}}\\s*?\\n?'.repeat(numArgs),
+        `[^\\S\\n\\r]*{{${keyword}}}\\s*` +
+          '\\s*{{\\s*\\n\\r?((?:(?!}})[^])*\\n\\r?)\\s*}}\\s*?\\n?\\r?'.repeat(
+            numArgs
+          ),
         'g'
       ),
       replaceParams2 = new RegExp(
-        `{{${keyword}}}` + '{{([^]*?)}}'.repeat(numArgs),
+        `{{${keyword}}}` + '{{((?:(?!}})[^])*?)}}'.repeat(numArgs),
         'g'
       ),
       replaceFunc = mode
@@ -64,6 +74,7 @@ const regExpEscape = /[-[\]{}()*+?.,\\^$#\s]/g,
     return str.replace(replaceParams, replaceFunc);
   },
   ifSEO = (text) => (config.usingSEO ? text : ''),
+  ifDisguise = (text) => (config.disguiseFiles ? text : ''),
   randomListItem = (lis) => () => lis[(Math.random() * lis.length) | 0],
   getRandomChar = randomListItem(charRandom),
   /* Text masks, found in src/data.json, are meant to be variations of the
@@ -108,33 +119,86 @@ const regExpEscape = /[-[\]{}()*+?.,\\^$#\s]/g,
               ? term
               : term.replace(subtermsByVowels, getRandomChar)
           ),
-  route = (text) =>
-    text
-      .replace(
-        getEndPoint,
-        // cacheBustList is purely for dealing with cached file loading issues.
-        (name, ancestor) =>
-          ancestor
-            ? flatAltPaths[name] || name
-            : flatAltPaths['files/' + name] ||
-              cacheBustList[name] ||
-              flatAltPaths[name] ||
-              name
-      )
-      .replace(
-        getPaths,
-        (path) => flatAltPaths['prefixes/' + path] || flatAltPaths[path] || path
-      )
-      .replace(getAbsoluteRoot, serverUrl.pathname),
+  route = (text, conditionalRoute = false) =>
+    conditionalRoute && routeConditions[conditionalRoute]
+      ? text.replace(
+          getEndPoint,
+          (name) => cacheBustList[name] || flatAltPaths['files/' + name] || name
+        )
+      : text
+          .replace(
+            getEndPoint,
+            // cacheBustList is purely for dealing with cached file loading issues.
+            (name, ancestor) =>
+              ancestor
+                ? flatAltPaths[name] || name
+                : flatAltPaths['files/' + name] ||
+                  cacheBustList[name] ||
+                  flatAltPaths[name] ||
+                  name
+          )
+          .replace(
+            getPaths,
+            (path) =>
+              flatAltPaths['prefixes/' + path] || flatAltPaths[path] || path
+          )
+          .replace(getAbsoluteRoot, serverUrl.pathname),
+  inlineElement = (htmlStr) => {
+    let relPath = htmlStr.match(getRoutePath) || htmlStr.match(getAttrPath),
+      wrapper = [],
+      fileType;
+    if (relPath)
+      try {
+        relPath = new URL(
+          '../views/dist' +
+            new URL(relPath[0], 'https://www.example.com').pathname,
+          import.meta.url
+        );
+        fileType = relPath.pathname
+          .slice(relPath.pathname.lastIndexOf('.') + 1)
+          .toLowerCase();
+        switch (fileType) {
+          case 'css': {
+            wrapper = ['<style>', '</style>'];
+            break;
+          }
+          case 'js': {
+            const parsedNode = htmlStr
+              .replace(getAttrValues, ' ')
+              .toLowerCase();
+            if (
+              parsedNode.indexOf(' defer ') !== -1 ||
+              parsedNode.indexOf(' defer>') !== -1
+            )
+              wrapper = ['<script defer>', '</script>'];
+            else wrapper = ['<script>', '</script>'];
+            break;
+          }
+          default: {
+            // Do nothing.
+          }
+        }
+      } catch (e) {
+        relPath = '';
+        console.log(e);
+      }
+    return relPath && wrapper.length && existsSync(relPath)
+      ? wrapper[0] +
+          readFileSync(relPath, 'utf8').trim() +
+          (wrapper[1] || wrapper[0])
+      : htmlStr;
+  },
+  inline = (htmlStr) =>
+    routeConditions.inline
+      ? htmlStr.replace(getNodesByLine, inlineElement)
+      : htmlStr,
   insertCharset = (str) => str.replace(charset, getRandomChar),
-  getRandomSplash = randomListItem(splashRandom),
-  hutaoInsert = (str) => str.replaceAll('<!--HUTAOWOA-->', getRandomSplash),
-  versionInsert = (str) => str.replaceAll('<!-- VERSION -->', VersionValue),
+  getSplash = () => randomListItem(splashRandom)(),
   getCookingText = () =>
     `<span style="display:none" data-fact="${randomListItem(vegetables)()}">${randomListItem(cookingInserts)()}</span>`,
   insertCooking = (str) =>
     str.replaceAll(
-      '<!-- IMPORTANT-HUTAOCOOKINGINSERT-DONOTDELETE -->',
+      '<!-- IMPORTANT-HUCOOKINGINSERT-DONOTDELETE -->',
       getCookingText
     ),
   encodingTable = (() => {
@@ -161,7 +225,9 @@ const regExpEscape = /[-[\]{}()*+?.,\\^$#\s]/g,
         }
         return output + Math.floor(randomNumber);
       })
-      .join(''),
+      .join('')
+      .replaceAll('{', '')
+      .replaceAll('}', ''),
   // To be used for {{insertions}} that are also encased in string literals.
   escapeStr = (str) =>
     str
@@ -169,34 +235,41 @@ const regExpEscape = /[-[\]{}()*+?.,\\^$#\s]/g,
       .replaceAll('\r', '\\r')
       .replaceAll('\n', '\\n'),
   orderedTransforms = [
+    [getSplash, 0],
+    [route, 2],
     [route, 1],
     [ifSEO, 1],
+    [ifDisguise, 1],
     [mask, 1],
+    [inline, 1],
   ],
   namedEntries = Object.freeze({
     __uv$config: escapeStr(
       config.randomizeIdentifiers ? createRandomID() : '__uv$config'
     ),
+    version: versionValue,
+    cacheVal: crypto.getRandomValues(new Uint32Array(1))[0],
+    defaultSearch: '{{DuckDuckGo}}',
   }),
   // List of manual censors for unavoidable cases.
   manualCensors = Object.freeze({
-    Google: 'Glasses',
-    Bing: 'Bell Sound',
+    Google: 'Google',
+    Bing: 'Bing',
     Brave: 'Brave',
-    DuckDuckGo: '2x Waterfowl Moves',
-    Startpage: 'Beginning Sheet',
+    DuckDuckGo: 'DuckDuckGo',
+    Startpage: 'Startpage',
     'wisp-transport': 'wst',
     libcurl: 'unix',
     epoxy: 'epoch',
+    'hu-lts': 'net-time',
   }),
   // Apply most obfuscation changes to an entire file's text content.
   prePaint = (str) => {
-    let paintedSource = insertCharset(
-      hutaoInsert(versionInsert(insertCooking(str)))
-    );
+    let paintedSource = insertCharset(insertCooking(str));
     paintedSource = applyMassInsert(
-      applyMassInsert(paintedSource, manualCensors, config.usingSEO),
-      namedEntries
+      applyMassInsert(paintedSource, namedEntries),
+      manualCensors,
+      config.usingSEO
     );
     for (let i = 0, total = orderedTransforms.length; i < total; i++)
       paintedSource = applyInsert(paintedSource, ...orderedTransforms[i]);

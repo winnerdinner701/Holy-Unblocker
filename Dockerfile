@@ -1,25 +1,23 @@
-FROM node:20.17.0-bookworm-slim
+FROM node:20-alpine
 
 WORKDIR /app
 
-COPY package.json ./
+LABEL org.opencontainers.image.title="Holy Unblocker LTS" \
+      org.opencontainers.image.description="An effective, privacy-focused web proxy service" \
+      org.opencontainers.image.version="6.9.1" \
+      org.opencontainers.image.authors="Holy Unblocker Team" \
+      org.opencontainers.image.source="https://github.com/QuiteAFancyEmerald/Holy-Unblocker/"
 
-RUN npm config set unsafe-perm true
-RUN npm set registry https://registry.npmjs.org/
-RUN npm config set fetch-retries 5
-RUN npm install --verbose
+RUN apk add --no-cache tor bash
 
-# Copy the rest of the project files
 COPY . .
 
-# Expose the port
-EXPOSE 8080
+RUN npm run fresh-install
+RUN npm run build
 
-# Start the app
-CMD ["npm", "start"]
+EXPOSE 8080 9050 9051
 
+COPY serve.sh /serve.sh
+RUN chmod +x /serve.sh
 
-# Build and Run Commands
-
-# docker build -t holyunblocker .
-# docker run -p 8080:8080 holyunblocker
+CMD ["/serve.sh"]

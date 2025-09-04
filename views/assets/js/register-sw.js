@@ -23,7 +23,7 @@
       '{{epoxy}}': '{{route}}{{/epoxy/index.mjs}}',
       '{{libcurl}}': '{{route}}{{/libcurl/index.mjs}}',
     },
-    storageId = 'hu-lts-storage',
+    storageId = '{{hu-lts}}-storage',
     storageObject = () => JSON.parse(localStorage.getItem(storageId)) || {},
     readStorage = (name) => storageObject()[name],
     defaultMode = /(?:Chrome|AppleWebKit)\//.test(navigator.userAgent)
@@ -92,11 +92,6 @@
           rewriterLogs: false,
           naiiveRewriter: false,
           scramitize: false,
-        },
-        siteFlags: {
-          'https://www.google.com/(search|sorry).*': {
-            naiiveRewriter: true,
-          },
         },
       });
 

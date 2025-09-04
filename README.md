@@ -1,4 +1,3 @@
-
 <img align="center" src="https://raw.githubusercontent.com/titaniumnetwork-dev/Holy-Unblocker/master/views/assets/img/github_banner.png"></img>
 
 <img align="left" width="40px" src="https://raw.githubusercontent.com/titaniumnetwork-dev/Holy-Unblocker/master/views/assets/img/logo_github.png"></img>
@@ -7,26 +6,32 @@
 
 ![GitHub Actions Status](https://github.com/QuiteAFancyEmerald/Holy-Unblocker/workflows/CI-Production/badge.svg)
 ![GitHub Actions Status](https://github.com/QuiteAFancyEmerald/Holy-Unblocker/workflows/CI-Win/badge.svg)
+[![Docker Image Version](https://img.shields.io/docker/v/quiteafancyemerald/holy-unblocker.svg)](https://hub.docker.com/r/quiteafancyemerald/holy-unblocker)
+[![Docker Pulls](https://img.shields.io/docker/pulls/quiteafancyemerald/holy-unblocker.svg)](https://hub.docker.com/r/quiteafancyemerald/holy-unblocker)
 
-Holy Unblocker LTS, an experimental web proxy service, can bypass web filters or "blockers" regardless of whether the method of censorship is client-side or network-based. This includes the potential ability to bypass content blockers from governments, chrome extensions, localized client firewalls, and network-related filters. The project even allows the ability to browse Tor/Onion sites in any browser (even Chromium) all through a website!
+Holy Unblocker LTS is an experimental web proxy service that can bypass web filters or "blockers" regardless of whether the method of censorship is client-side or network-based. This includes the ability to bypass content blockers from governments, chrome extensions, localized client firewalls, and network-related filters. The project even allows the ability to browse Tor/Onion sites in any browser (even Chromium) all through a website!
 
 ## You can support Holy Unblocker by starring the repository!
-This project serves mostly as a proof of concept for the ideal clientless solution to bypassing censorship. Simply host this project on any domain and have an alternative solution to a VPN without needing to download anything on said device. Being a secure web proxy service, it supports numerous sites while being updated frequently and concentrating on being easy to self-host.
 
-Works with a large number of sites, including YouTube, Discord, and more!
+This project serves mostly as a proof of concept for the ideal clientless solution to bypassing censorship. A good use case of this project would be if you ever needed a clientless solution to use Tor or leave minimal traces of device activity. Simply host this project on any domain and have an alternative solution to a VPN without needing to download anything on said device. Being a secure web proxy service, it supports numerous sites while being updated frequently and concentrating on being easy to self-host. Holy Unblocker LTS works with a large number of sites, including YouTube, Discord, GeForce NOW and more!
 Also has a good amount of locally hosted games featured on the site.
 
 ### Over 30M+ users since 2020. Thank you so much for the support I could have never imagined how massive the web proxy community has become.
+
 #### Current Branch: Latest
+
 <details><summary>Branch Types</summary>
 
 - Latest (master; built for FOSS and SEO)
 - Beta (pending changes; changes that may break things)
-- Stable (v4, v5, v6; stable version of Holy Unblocker LTS)
-- Production (changes for self hosting in production settings; max filtering evasion and request handling)
+- Production (v4, v5, v6; stable version of Holy Unblocker LTS. Changes for self hosting in production settings; max filtering evasion and request handling)
 </details>
 
 #### Considering switching branches for self-hosting to a production branch!
+
+View the <a href="#deploy-holy-unblocker">self-deployment options</a> if you wish to self host this prokect. Can't deploy using any of the free options? Check out Railway or look into cheap, paid VPS hosting solutions. If you don't wish to self-host join the discord for more official instance links that are restocked frequently.
+
+**Be sure to join Titanium Network's Discord for more official site links:** <a href="https://discord.gg/unblock">https://discord.gg/unblock</a>
 
 <br>
 
@@ -36,44 +41,44 @@ Also has a good amount of locally hosted games featured on the site.
 > [!TIP]
 > Holy Unblocker LTS is optimized for self-hosting to provide you with maximum privacy control! Fork this repository and consider starring. You can self-host using either free or paid deployment options, or set it up on a dedicated instance (VPS) for enhanced performance.
 
-| **Supported Sites**         | **Features**                                                                                                           |
-|-----------------------------|------------------------------------------------------------------------------------------------------------------------|
-| Youtube                     | Built-in variety of open source web proxies with both a focus on speed and/or security                                 |
-| CoolMathGames               | Features "Source Randomization" to circumvent major filters effectively along with randomizations to proxy globals    |
-| Discord                     | Tab title + icon customization using the Settings Menu for improved browsing stealth                                   |
-| Now.gg                      | Adblocking support across all websites while surfing                                                                   |
-| Reddit.com                  | SOCKS5 and Onion routing support with Tor within the Settings Menu. Use Tor/Onion sites in any browser!                                                    |
-| GeForce NOW                 | Game library with moderately decent titles and open-source emulation projects                                          |
-| Spotify                     | Has frequent support articles for issues relating to various proxy instances                                           |
-| And essentially all sites!  | Built for intensive production loads and speed                                                                          |
-
+| **Supported Sites**        | **Features**                                                                                                                          |
+| -------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Youtube                    | Built-in variety of open source web proxies with both a focus on speed and/or security                                                |
+| Reddit                     | Features Source Randomization and DOM Masquerading to circumvent major filters effectively along with randomizations to proxy globals |
+| Discord                    | Tab title + icon customization using the Settings Menu for improved browsing history stealth                                          |
+| Instagram                  | Adblocking support across all websites while surfing and low latency DNS on official servers                                          |
+| Reddit.com                 | SOCKS5 and Onion routing support with Tor within the Settings Menu. Use Tor/Onion sites in any browser!                               |
+| GeForce NOW                | Game library with moderately decent titles and open-source emulation projects                                                         |
+| Spotify                    | Bypass regional proxy blocks by swapping regions or enabling Tor                                                                      |
+| And essentially all sites! | Built for intensive production loads and ease of setup                                                                                |
 
 <img src="https://raw.githubusercontent.com/titaniumnetwork-dev/Holy-Unblocker/master/views/assets/img/preview/hu-v6.4.3-preview.png"></img>
 <img src="https://raw.githubusercontent.com/titaniumnetwork-dev/Holy-Unblocker/master/views/assets/img/preview/hu-v6.3.0-preview-settings.png"></img>
 
-Read below for information if the official site is blocked or for obtaining more links. Can't deploy using any of the free options below? Check out Railway or look into cheap, paid VPS hosting solutions.
-
-**Be sure to join Titanium Network's Discord for more official site links:** <a href="https://discord.gg/unblock">https://discord.gg/unblock</a>
-
 ## Deploy Holy Unblocker
 
 ### Free Deployments
+
 [![Deploy to Koyeb](https://binbashbanana.github.io/deploy-buttons/buttons/remade/koyeb.svg)](https://app.koyeb.com/deploy?name=holy-unblocker&type=git&repository=QuiteAFancyEmerald%2FHoly-Unblocker&branch=v6.3_production&builder=buildpack&env%5B%5D=&ports=8080%3Bhttp%3B%2F)
 [![Deploy to Oracle Cloud](https://binbashbanana.github.io/deploy-buttons/buttons/remade/oraclecloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/BinBashBanana/deploy-buttons/archive/refs/heads/main.zip)
 
-<details><summary>More</summary>
+<details><summary>Alternative Free Sources</summary>
 
+[![Deploy to Cyclic](https://binbashbanana.github.io/deploy-buttons/buttons/remade/cyclic.svg)](https://app.cyclic.sh/api/app/deploy/shuttlenetwork/shuttle)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/QuiteAFancyEmerald/Holy-Unblocker)
 [![Deploy to Fly.io](https://img.shields.io/badge/Deploy%20to-Fly.io-blue?logo=fly.io)](https://fly.io/launch?repo=https://github.com/QuiteAFancyEmerald/Holy-Unblocker)
 
 </details>
 
 ### Production Paid/Free Options (Requires Payment Info)
+
 [![Deploy to Azure](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/azure.svg)](https://deploy.azure.com/?repository=https://github.com/QuiteAFancyEmerald/Holy-Unblocker)
 [![Deploy to IBM Cloud](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/ibmcloud.svg)](https://cloud.ibm.com/devops/setup/deploy?repository=https://github.com/QuiteAFancyEmerald/Holy-Unblocker)
 [![Deploy to Amplify Console](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/amplifyconsole.svg)](https://console.aws.amazon.com/amplify/home#/deploy?repo=https://github.com/QuiteAFancyEmerald/Holy-Unblocker)
 [![Run on Google Cloud](https://raw.githubusercontent.com/BinBashBanana/deploy-buttons/master/buttons/remade/googlecloud.svg)](https://deploy.cloud.run/?git_repo=https://github.com/QuiteAFancyEmerald/Holy-Unblocker)
 
 #### What happened to Replit/Heroku Deployment?
+
 Replit is no longer free and Heroku has a set policy against web proxies. Try GitHub Codespaces or Gitpod instead for development on the cloud OR Koyeb for free hosting.
 
 ### GitHub Codespaces
@@ -82,10 +87,10 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 
 - Fork (and star!) this repository to your GitHub account
 - Head to the official <a href="https://github.com/codespaces">Codespaces</a> website (ensure you have a GitHub account already made)
-- Select **New Codespaces** and look for *[USERNAME]/Holy-Unblocker* on your account
+- Select **New Codespaces** and look for _[USERNAME]/Holy-Unblocker_ on your account
 - Ensure the branch is set to `master` and the dev container configuration is set to **Holy Unblocker LTS**
 - Select **Create Codespace** and allow the container to setup
-- Type `npm install` and `npm start` in the terminal
+- Type `npm run fresh-install` and `npm start` in the terminal
 - Click "Make public" on the application popup, then access the deployed website via the ports tab.
 
 </details>
@@ -99,7 +104,7 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
     - [TOR Routing](#toronion-routing-setup)
     - [Proxy](#proxy-configuration)
     - [Client Navigation](#client-navigation-configuration)
-    - [Games Management](#games-management) 
+    - [Games Management](#games-management)
   - [Structure](#structure)
     - [Structure Information](#structure-information)
     - [Static Files](#details-of-views)
@@ -115,44 +120,107 @@ Replit is no longer free and Heroku has a set policy against web proxies. Try Gi
 
 ## How to Setup
 
-#### It is highly recommended you switch branches via your IDE to a production released branch. Often the master branch contains unstable or WIP changes. 
+#### It is highly recommended you switch branches via your IDE to a production released branch. Often the master branch contains unstable or WIP changes.
 
 #### Example: v6.x_production instead of master
 
 ### Terminal
 
-Either use the button above to deploy to the deployment options above or type the commands below on a dedicated server:
+Either use the button above to deploy to the deployment options above or type the commands below on a dedicated server
+
+Please ensure you are using Node 20.x please:
 
 ```bash
-git clone --recurse-submodules https://github.com/titaniumnetwork-dev/Holy-Unblocker.git
+git clone https://github.com/QuiteAFancyEmerald/Holy-Unblocker.git
 
 cd Holy-Unblocker
 
-git submodule init
-
-# Using the configuration file you can automatically use pm2 if you are hosting on a VPS!
+# Edit config.js and set production to true if you want to use pm2 (Allows for easier VPS hosting)
+npm run fresh-install
 npm start
 
 # Or on subsequent uses...
 npm restart
 
+# For killing any production processes made with pm2
+npm run kill
+
+# For clearing respective Rammerhead cache
+npm run clean
+
 # If you encounter any build errors...
 npm run build
 
 # If you encounter any service errors...
-npm run proxy-validator
+npm run test
 ```
 
 This website is hosted locally with Scramjet, Ultraviolet (Wisp, Bare-Mux, EpoxyTransport, CurlTransport) and Rammerhead built-in.
 
+You will need Node.js 20.x and Git installed; below is an example for Debian/Ubuntu setup.
+
+<details>
+
+```
+sudo apt update
+sudo apt upgrade
+sudo apt install curl git nginx
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+nvm install 20
+nvm use 20
+
+git clone https://github.com/QuiteAFancyEmerald/Holy-Unblocker.git
+cd Holy-Unblocker
+
+npm run fresh-install
+
+# Then edit config.json to change production to true to automatically use pm2
+
+npm start
+
+# Then setup a reverse proxy using NGINX; use the link below for the NGINX guide. You can edit the file in /etc/nginx
+
+sudo systemctl restart nginx
+
+# For Tor look it up if you need it setup
+```
+
+</details>
+
+Resources for self-hosting:
+
+- https://github.com/nvm-sh/nvm
+- https://docs.titaniumnetwork.org/guides/nginx/
+- https://docs.titaniumnetwork.org/guides/vps-hosting/
+- https://docs.titaniumnetwork.org/guides/dns-setup/
+
 ### Configuration
 
 #### Server Configuration Setup
-The default place for the proxy when its started is `http://localhost:8080`, but you can change it if needed in `./ecosystem.config.js`. You can also modify the other configuration values at `./config.json`. To clarify you change the PORT and other production metrics via `./ecosystem.config.js`. Localized changes for source randomization, auto-minify, etc. are located in `./config.json`.
+
+The default PORT for the proxy when started is `http://localhost:8080`. You can change the PORT and other production metrics if needed in `./ecosystem.config.js`. 
+
+Every other localized changes for source randomization, auto-minify, etc. are located in `./config.json`.
+
+**config.json**
+- `minifyScripts`: Automatically minify respective static assets upon starting the server.
+- `randomizeIdentifiers`: Enable experimental proxy global randomization for Ultraviolet. This reduces the chances of UV being detected by any extension based filters.
+- `production`: Utilize a pre-configured production setup for server hosting. Automatically has cache control, session jobs for Rammerhead and source rewrites setup.
+- `disguiseFiles`: Enable DOM masquerading which obfuscates real the real content fetches for HU LTS. This is done through disguising requests, decompressing and then reconstructing the DOM tree.
+- `usingSEO`: Enable Source Randomization which randomizes the source by swapping chunks of data specified in `./src/data.json`. Highly useful for masking keywords that will automatically flag or block Holy Unblocker LTS as well as preventing source blocks.
 
 #### Tor/Onion Routing Setup
 
+You need to setup Tor (no GUI need/GUI is alright) in order for the Onion Routing setting to work!
+
 Simply host Tor using this guide: https://tb-manual.torproject.org/installation/
+
+Alternative Guide (for CLI): https://community.torproject.org/onion-services/setup/install/
 
 If you are hosting Holy Unblocker LTS on a VPS utilizing Ubuntu consider attaching Tor to systemctl for easier production management. Once Tor is up and running on either Linux or Windows it will work automatically with Holy Unblocker LTS when enabled by the user via the Settings menu.
 
@@ -170,7 +238,7 @@ The primary location for tweaking any web proxy related settings assigned via th
 
 #### Client Navigation Configuration
 
-The primary location for any client side navigation scripts is `./views/assets/js/common.js`. This file is primary used for Omnibox (Search Engine) functionality, swapping proxy options and linking games. 
+The primary location for any client side navigation scripts is `./views/assets/js/common.js`. This file is primary used for Omnibox (Search Engine) functionality, swapping proxy options and linking games.
 
 - `getDomain`: This constant is used for specifying any subdomains to remove when appending a URL into the omnibox.
 - `goFrame`: This specifies the stealth frame used for Holy Unblocker LTS
@@ -181,42 +249,44 @@ The primary location for any client side navigation scripts is `./views/assets/j
 - `goProx`: This constant allows for the mapping of URL handling for specific proxies, games or links that need to fall under a web proxy.
 
 ```js
-  const goProx = Object.freeze({
-    ultraviolet: urlHandler(uvUrl),
+const goProx = Object.freeze({
+  ultraviolet: urlHandler(uvUrl),
 
-    scramjet: urlHandler(sjUrl),
+  scramjet: urlHandler(sjUrl),
 
-    rammerhead: asyncUrlHandler(
-      async (url) => location.origin + (await RammerheadEncode(search(url)))
-    ),
+  rammerhead: asyncUrlHandler(
+    async (url) => location.origin + (await RammerheadEncode(search(url)))
+  ),
 
-    // `location.protocol + "//" + getDomain()` more like `location.origin`
+  // `location.protocol + "//" + getDomain()` more like `location.origin`
 
-    examplepath: urlHandler(location.protocol + `//c.${getDomain()}/example/`),
+  examplepath: urlHandler(location.protocol + `//c.${getDomain()}/example/`),
 
-    examplesubdomain: urlHandler(location.protocol + '//c.' + getDomain()),
+  examplesubdomain: urlHandler(location.protocol + '//c.' + getDomain()),
 
-    example: urlHandler(sjUrl('https://example.com')),
-  });
+  example: urlHandler(sjUrl('https://example.com')),
+});
 ```
 
 - `prSet`: Attaches event listeners using goProx for any buttons or inputs needed
 
 ```js
- // prSet function code here....
- 
-  prSet('pr-uv', 'ultraviolet');
-  prSet('pr-sj', 'scramjet');
-  prSet('pr-rh', 'rammerhead');
-  prSet('pr-yt', 'youtube');
-  prSet('pr-example', 'example');
+// prSet function code here....
+
+prSet('pr-uv', 'ultraviolet');
+prSet('pr-sj', 'scramjet');
+prSet('pr-rh', 'rammerhead');
+prSet('pr-yt', 'youtube');
+prSet('pr-example', 'example');
 ```
 
 - `huLinks/navLists`: Automatically takes paths stated in `./views/assets/json` and appends them depending on the page and usage. This is used for hiding links that would lead to filter blocks and create an easier system for adding games.
 
 #### Games Management
 
-As stated above all game links that need to be appended to a page (including images and descriptions) are managed via the nav files in`./views/assets/json`. When cloning Holy Unblocker utilize `--recurse-submodules` to ensure all submodules are downloaded along with `git submodule init`. 
+As stated above all game links that need to be appended to a page (including images and descriptions) are managed via the nav files in`./views/assets/json`. 
+
+Download the latest release <a href="https://github.com/QuiteAFancyEmerald/Holy-Unblocker/blob/master/views/GAMES.md">here</a> and extract it within a folder called `/views/archive`.
 
 - `views/archive/g`: Contains any local or external HTML5/web games.
 - `views/archive/gfiles/flash`: Contains Ruffle (an Adobe Flash emulator) and a collection of flash games linked to an external CDN.
@@ -226,32 +296,6 @@ As stated above all game links that need to be appended to a page (including ima
 
 <details><summary>Web Pages</summary>
 
-WIP
-
-- `index.html`: The homepage of the site.
-- `error.html`: A general error page for all 404 errors and other errors.
-- `info.html`: Documentation (This page!)
-- `faq.html`: Frequently asked questions page.
-- `hidden.html`: Fake "Site not Found" page (unused)
-- `frame.html`: Handles any pages under stealth.
-- `surf.html`: Web Proxies page, page offers to be redirected to any proxies you would like to add. In this case, Ultraviolet and Rammerhead.
-- `credits.html`: List of all contributors to the site.
-- `bookmarklets.html`: Bookmarklets page, to be worked on more in the future.
-- `icons.html`: Information regarding Settings Menu page. Added this in for standard users.
-- `terms.html`: Terms of Services, AUP and Privacy Policy page.
-- `gtools.html`: Games page, help from @BinBashBanana and @kinglalu.
-- `games5.html`: HTML5 game navigation page.
-- `emulators.html`: Emulator navigation page, using <a href="https://github.com/BinBashBanana/webretro">webretro</a>.
-- `emulibrary.html`: Games page for emulated games (not included in public release)
-- `flash.html`: Games page for flash games, credits given to @BinBashBanana and Titanium Network for its assets.
-- `ultraviolet.html`: TODO
-- `scramjet.html`: TODO
-- `rammerhead.html`: TODO
-- `youtube.html`: A proxied version of Youtube running off the locally hosted Ultraviolet.
-- `discord.html`: Hub for the Discord proxy.
-- `reddit.html`: Hub for the Reddit proxy.
-</details>
-
 ### Structure Information
 
 - `/views/`: The physical site base of Holy Unblocker goes here where static assets are served.
@@ -259,179 +303,64 @@ WIP
 
 #### Details of `/views/`
 
-- `/archive/` is used for game pages and vibeOS.
+- `/dist/` is used for minfied files. Created on build.
 - `/pages/` is used for the HTML for the site.
 - `/assets/` is used for storing various CSS, JS, image, and JSON files.
+- `/scram/` contains the respective local Scramjet implementation. Some files are overridden by the node module.
+- `/uv/` contains the UV implementation.
 
 #### Scripts located in `/views/assets/js/`
 
-- `bareTransport.js` is a locally installed version of the bare transport module which allows Ultraviolet to function.
 - `card.js` adds a fancy visual effect to the box cards displayed on the welcome screen.
-- `common.js` is used on all pages and allows commonly used features to function.
-- `csel.js` manages the settings menu on the header.
-- `particles.js` is the animated background effect that's present on all pages.
+- `common.js` is used on all pages and allows most site features to function such as autocomplete.
+- `csel.js` manages the settings menu, omnibox function and other additional features.
+- `loader.js` is used as an asset for DOM masquerading.
 - `register-sw.js` creates and manages service workers that allow Ultraviolet to function, and also uses bare transport.
 
 ## Future Additions
 
-This will be our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above.
-
-This will be our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above. Release for production will be v8.x.x and above.
-
-## Code Cleanup
-
-- [x] Remove all current obfuscation in the source code. It needs to be dynamically obfuscated if anything, or not obfuscated at all. This option will be a config option on the server side before rendering with Fastify for a performance focus. Meta elements will have an additonal attribute indicating if they should be moved. This is to ensure a SEO source can be served by config or a source focused on pure censorship evasion.
-- [ ] Optimize the stylesheets and the HTML layout. Add more proper commenting and redivide the code so that it's less hard on the eyes.
-- [ ] Optimize the JS. This time it won't be in one line and will be somewhat thoroughly commented.
-- [x] Restructure navigation scripts to ensure updated proxy functionality is sanitized and effective
-- [x] Particles.js automatically adjusting per display size - done
-- [x] Fix routes.mjs throwing with incorrect paths - done
-- [x] Create test script - done
-- [x] XSS and fingerprinting protection (may need updates) - done
-- [x] Update games navigation JS and page/change to JSON object system - done
-- [ ] Ensure all the original submodules get added back to HU-Archive
-- [x] Mobile support - (welcome screen only, partial/needs work)
-- [ ] SEO overhaul adapted from the v3 SEO Guide format - partial
-- [x] Fastify routes modified to ensure perfect SEO. This means absolute paths such as /example instead of ?z - done
-- [x] Randomize the \_\_uv$config global, and optionally randomize the UV prefix and URL encoding via cookies
-
-## Proxy/Site Functionality
-
-- [x] Ensure Ultraviolet is updated to support bare-mux and wisp - done
-- [x] Ensure Scramjet is added and works together with UV's implementation - done
-= [x] Refactor register-sw.js - done
-- [x] Add Rammerhead support - done
-- [x] Fix slow Ultraviolet speeds despite being local; something on the backend?? - done
-- [x] Fix Ultraviolet on Firefox - (partial/needs work)
-- [x] Adapt Applications page to use Scramjet (for Reddit, YouTube, Discord) - done
-- [x] libcurl, epoxy and all that fun stuff - done
-- [x] socks5/tor routing option that can be configured (enabled) via either a cookie or pathname as a settings meny option - done
-- [x] socks5 regional proxy implementation - done
-- [ ] Update games page content to 10000 games
-- [x] Update Applications page to reflect modern fast links (use examples from the modern web proxy base) - done. can be expanded later
-- [x] Update settings menu again to make more room for more features
-- [x] Update csel.js (after Setting menu redesign) to support custom transports, icon swap, routing - done
-- [x] Update csel.js to support network based adblocking (partial/needs work)
-- [ ] Add a "website self-destruct" button to the settings menu
-- [x] Flesh out and rework the UV / Scramjet / bare client error page - done
-- [x] Update sw.js to support workerware (https://github.com/MercuryWorkshop/workerware)-- This is not done however we have our own middleware system implemented for adblocking, etc. 
-- [ ] Omnibox autoupdate script (for the Google/Bing style auto suggest feature)
-- [ ] Omnibar functionality (back and forward navigation, settings menu and create new stealth page with URL)
-- [ ] Games library will feature 10000 items; 5000 flash games and 5000 other game types
-- [ ] Improve adblocking functions on site using AnuraOS standards
-- [x] Revamp the Stealth Frame with a slight animation (ease in and then the wheeling loading with a gradient fading away once its loaded or shows the error page LOL), a loading wheel/page and lastly a omnibox widget. It will have like nav buttons, some of the settings from the settings menu, a home button, a button that brings up the Setting menu and be in a designed position. Intent is to reduce the back/forth nature that users have to do currently making it more tedious to use the site. - partial. needs functionality. 
-
-
-## Site Redesign
-
-- [x] Landing Cards - done
-- [x] Change fonts to cleaner look
-- [x] Add more AOS interactions on scroll or hover
-- [x] Add subtle noise to background elements
-- [ ] Update colors + add themes
-- [x] Toggle elements
-- [x] Other card options
-- [x] Radial blur elements
-- [ ] Code standard examples
-- [x] Horizontal/general movement on scroll with AOS
-- [x] Showcase dev dependencies
-- [ ] Update icons
-- [x] Landing Page - (partial/needs work)
-- [x] Settings Menu - (partial/needs work)
-- [x] More Dropdown Menu
-- [x] Web Proxies page
-- [x] Application page
-- [ ] Hosting page
-- [ ] Resources page
-- [ ] Games Library page
-- [ ] Emulators Library page
-- [ ] Emu Library page
-- [ ] Web Games page
-- [x] Flash Games page
-- [ ] Documentation on-site + Getting Started information updated (Tor, etc.)
-- [x] FAQ page
-- [x] Credits page
-- [x] TOS page
-- [x] Footer Design
-- [x] Header Design
-
-## Community Requests
-
-- [ ] Add [Quake WASM](https://github.com/GMH-Code/Quake-WASM)
-- [ ] Celeste WASM
-- [ ] Doom WASM
-
-## Changelog (Old; too lazy to type it all out now)
-
-- Added wisp support
-- Fixed AD config setting being opt-out; ads are not implemented in the project however
-- Added Rammerhead support (locally)
-- Drastically updated visuals across the service and refactored stylesheets
-- Bumped games page functionality
-- Updated randomization scripts to ES6 syntax and implemented the alternative to RegEx string replacement
-- Helmet for express implemented into backend
-- Improved component handling via templates.mjs along with deletion of obsolete files that previously handled this standard in a poor format
-- Fixed oddly slow speeds with Ultraviolet (as well as a general version bump to support epoxy-tls and bare-mux)
-- Implemented testing scripts for an improved GitHub actions workflow by doing a quick test on proxy + site functionality
-- Greatly optimized client-side scripts across the site with a new standard, and generally reworked to no longer leave global variables
-- Changes to server.mjs with path logic and error handling
-- Updated standards for common scripts
-- libcurl and bare-as-module support added
-- Deleted 5 JS scripts and moved lots of data into JSON files. Big reorganization. Games menu core scripts now nested inside of common.js utilizing a JSON system
-- Massive updates to the Settings menu visually and functionality wise; added Bare-Mux support for swapping transports to work with Ultraviolet, default icons and selective adblocking + Tor on any proxy instances
-- CSS Has been partially restructured for mobile support, and is now properly arranged into clearly labeled sections (for the most part)
-- Incorporated makeshift domain blacklisting functionality into Ultraviolet, currently used for blocking ads if ads are disabled in settings
-- Fleshed out the SEO with more descriptions and better labeling
-- Switched to Fastify for serving content from the backend; a separate Express backend file is kept in case it's still needed
-- Rammerhead is now locally built into the HU LTS repository
-- Simplified the HU LTS setup process and added more default npm commands
+<a href="https://github.com/QuiteAFancyEmerald/Holy-Unblocker/blob/master/TODO.md">This</a> is our nonexhaustive todo list for Holy Unblocker LTS v6.x.x and above. Release for production will be v7.x.x and above.
 
 ## Vague Explanation for Beginners With External Proxies and Hosting
 
-You will first want to host your proxies locally or externally. OUTDATED
+You will first want to host your proxies locally or externally.
 
 #### List of some good hosting options:
 
-- <a href="#">Oracle Cloud</a> (Free, Paid, Dedicated)
-- <a href="https://repl.it">Repl.it</a> (Free)
+- <a href="https://crunchbits.com/">Crunchbits</a> ( Current Hosting Provider)
+- <a href="https://greencloudvps.com">Greencloud</a> (Paid)
+- <a href="https://www.oracle.com/cloud">Oracle Cloud</a> (Free, Paid, Dedicated)
 - <a href="https://azure.microsoft.com">Azure</a> (Free and Paid)
 
 Out of the list of hosting providers Dedipath and Azure rank first as a preference. You may also self-host.
 
 After you have selected a decent VPS, use Cloudflare for the DNS records for both the site and the subdomains for the proxies.
 
-This is an example of DNS records involving Heroku. Self-hosting will require `A records` preferably.
+This is an example of DNS records. Self-hosting will require `A records` preferably.
 <img src="https://raw.githubusercontent.com/titaniumnetwork-dev/Holy-Unblocker/master/views/assets/img/dnssetup.png" width="500"></img>
 
-- `@` and `www.example.ml` are being used for Holy Unblocker LTS.
-- `client.example.ml` is being used for other instances like Libreddit or Invidious.
+- `@` and `www.example.com` are being used for Holy Unblocker LTS.
+- `a.example.com` is being used for other instances like Libreddit, Invidious or web ported games depending on what the site maintainer needs.
 
 As stated previously, Holy Unblocker is hosted locally with Scramjet, Ultraviolet and Rammerhead out of the box. No need for external instances.
 
-#### Freenom/Domain Steps
+#### Domain Steps
 
-For beginners, Freenom is a good provider for obtaining domains for free. However, Freenom only provides their TLDs (`.cf`, `.ml`, `.gq`, `.ga`, and `.tk`) for free, which can be easily blocked.
-
-- Get some Freenom domains then add them to your Heroku instance (Personal > [App Name] > Settings > Domains)
-  Add a domain for both `www.example.cf` and `example.cf` with .cf being interchangeable with other Freenom domain names.
-- If you prefer to obtain premium domains (TLDs) then use <a href="https://porkbun.com">Porkbun</a>, which offers domains for amazing prices. Literally a `.net` domain normally costs around $10. On Porkbun for the first year it costs $3 so its definitely a deal.
+- If you prefer to obtain premium domains (TLDs) then use <a href="https://porkbun.com">Porkbun</a>, which offers domains for amazing prices. Literally a `.org` domain normally costs around $5 first year.
 
 #### Cloudflare Steps
 
-- Use Cloudflare (make an account), add your site (Freenom Domain or other) and then add your various DNS targets to Cloudflare. Make sure you add Cloudflare's Nameservers which will be given later when you are adding your site.
+- Use Cloudflare (make an account), add your site and then add your various DNS targets to Cloudflare. Make sure you add Cloudflare's Nameservers which will be given later when you are adding your site.
 
 Make sure they are CNAME although A records also work and try to follow this structure:
 
 **Type | Name | Target**
 
-`CNAME | @ | your-main-heroku-target-here.herokudns.com`  
-`CNAME | www | your-main-heroku-target-here.herokudns.com`
+`A | @ | VPS IP GOES HERE`  
+`A | www | VPS IP GOES HERE`  
+`A | a | VPS IP GOES HERE`
 
-**Below are if you want external proxies also with your site:**
-
-`CNAME | a | your-womginx-instance-here.herokudns.com`
-
-Make sure HTTPS is forced and have SSL set to Flexible for some services. Otherwise you can have SSL set to Full.
+Make sure HTTPS is forced and have SSL set to Flexible (if you don't use LetsEncrypt). Otherwise you can have SSL set to Full.
 
 #### Workspace Configurations
 
@@ -444,7 +373,15 @@ git clone https://github.com/QuiteAFancyEmerald/Holy-Unblocker.git
 
 cd Holy-Unblocker
 
-npm install
+npm run fresh-install
+
+# If you wish to start the project
+
+npm start
+
+# For testing endpoints and errors
+
+npm run test
 ```
 
 Now simply add the folder you cloned this repo in in VSC. Then run `npm install`. I recommend that if you are releasing this publically on GitHub that you add a `.gitignore` in your root directory with the following exclusions:
@@ -473,7 +410,7 @@ Due to piracy concerns, size, etc. this has been moved over <a href="https://git
 
 **Why is the site I am on not working correctly or having CAPTCHA errors?**
 
-Captcha support is currently not available on all of the current proxies sadly. Therefore some sites may not work with any of the sites. Read below for issues with links on sites.
+Captcha support is spotty on all of the current proxies sadly. It is primarily supported by Scramjet. Therefore some sites may not work with any of the sites.
 
 **I am getting 502 errors. What do I do?**
 
@@ -485,7 +422,7 @@ If you still have any questions feel free to ask them in the discord linked here
 
 ### Why are official domains now numbered? Is this project maintained again?
 
-Yes, this project is active again for LTS support! However, the approach is now much simpler to ensure functionality: traffic will be focused on a single domain. More than ever, this project serves as a proof of concept for the brave souls willing to innovate in the web proxy service space.
+Yes, this project is active again for LTS support! However, the approach is now much simpler to ensure functionality: domain restocks as needed and a highly maintained source. More than ever, this project serves as a proof of concept for the brave souls willing to innovate in the web proxy service space.
 
 <details><summary>Former Closing Message (Original - 2022)</summary>
 
@@ -519,7 +456,8 @@ This project currently uses Scramjet and Ultraviolet as web proxies adhering to 
 
 - <a href="https://github.com/MercuryWorkshop/scramjet">Scramjet</a>
 - <a href="https://github.com/titaniumnetwork-dev/Ultraviolet">Ultraviolet</a>
-- <a href="https://github.com/MercuryWorkshop/wisp-server-node">Wisp</a>
+- <a href="https://github.com/MercuryWorkshop/wisp-server-node">Wisp-Server-Node</a>
+- <a href="https://github.com/MercuryWorkshop/wisp-server-python">Wisp-Server-Python</a>
 - <a href="https://github.com/MercuryWorkshop/EpoxyTransport">EpoxyTransport</a>
 - <a href="https://github.com/MercuryWorkshop/CurlTransport">libcurl-transport</a>
 - <a href="https://github.com/MercuryWorkshop/bare-mux">Bare-Mux</a>

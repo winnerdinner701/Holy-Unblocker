@@ -33,8 +33,21 @@ let pages = {
    * NOT entire folders, check the routes below and add it manually.
    * If you change route names here, also check the altPaths variable below.
    */
+
+  // Set the default page for when no pathname is supplied. Be sure to change the
+  // option for disguiseFiles if the entry point should be hidden.
+  default: config.disguiseFiles ? 'login' : 'index',
   index: 'index.html',
   'manifest.json': 'manifest.json',
+
+  /* Users must visit this route if disguiseFiles is enabled. The page loader only
+   * requests the site's contents if it has a local key, which is given by this page.
+   * Be sure to update the following line(s) in src/server.mjs if you change this
+   * variable:
+   *   let exemptPages = ['login', .........];
+   *   if (pages.default === 'login') exemptPages.push('');
+   */
+  login: 'pages/misc/deobf/entry-point.html',
 
   // This route for the error page is also used to define text404 down below.
   'test-404': 'error.html',
@@ -67,7 +80,6 @@ let pages = {
   'robots.txt': 'robots.txt',
   'sitemap.xml': 'sitemap.xml',
   'browserconfig.xml': 'browserconfig.xml',
-  'favicon.ico': 'favicon.ico',
 };
 
 let externalPages = {
@@ -85,8 +97,11 @@ let externalPages = {
     ultraviolet: 'https://github.com/titaniumnetwork-dev/Ultraviolet',
     wisp: 'https://github.com/MercuryWorkshop/wisp-protocol',
   },
+  codespaces: 'https://github.com/codespaces',
+  'tor-project': 'https://tb-manual.torproject.org/installation',
   'titaniumnetwork-documentation': 'https://docs.titaniumnetwork.org',
   'titaniumnetwork-discord': 'https://discord.gg/CwWpdGkuWY',
+  'truffled': 'https://truffled.lol',
   'rammerhead-discord': 'https://discord.gg/VNT4E7gN5Y',
 };
 
@@ -118,12 +133,16 @@ let altPaths = {
     wisp: 'router',
   },
   'titaniumnetwork-documentation': 'docs',
+  codespaces: 'codesp',
+  'tor-project': 'tr',
   'titaniumnetwork-discord': 'social',
+  'truffled': 'educational',
   'rammerhead-discord': 'rdis',
   /* Raw File Names */
   files: {
     'scramjet.all.js': 'working.all.js',
     'scramjet.sw.js': 'working.sw.js',
+    'scramjet.sw-blacklist.js': 'working.sw-blacklist.js',
     'scramjet.sync.js': 'working.sync.js',
     'scramjet.wasm.wasm': 'working.wasm.wasm',
     'uv.handler.js': 'networking.handler.js',
@@ -134,12 +153,19 @@ let altPaths = {
     'uv.webp': 'nt.webp',
     'scramjet.webp': 'wr.webp',
     'rammerhead.webp': 'physics.webp',
+    'fastify.webp': 'fs.webp',
+    'nordtheme.webp': 'nord.webp',
+    'nodejs.webp': 'node.webp',
+    'fontawesome.webp': 'fa.webp',
+    'webretro.webp': 'notebook.webp',
+    'ruffle.webp': 'rs.webp',
   },
   /* Prefixes */
   prefixes: {
     roms: 'ms',
     uv: 'network',
     scram: 'worker',
+    chii: 'ani',
     epoxy: 'epoch',
     libcurl: 'unix',
     bareasmodule: 'utc',
@@ -223,9 +249,9 @@ const cookingInserts = insert.content,
   delimiter = insert.delimiter,
   textMasks = insert.textMasks,
   splashRandom = insert.splash,
-  VersionValue = insert.version,
+  versionValue = insert.version,
   cacheBustList = {
-    'styles.css': 'styles-1735118314.css',
+    'styles.css': 'styles-1755147161.css',
     'common.js': 'common-1735118314.js',
   };
 
@@ -245,6 +271,6 @@ export {
   delimiter,
   textMasks,
   splashRandom,
-  VersionValue,
+  versionValue,
   cacheBustList,
 };
